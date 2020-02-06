@@ -7,6 +7,15 @@ import {
 	END,
 } from '@19h47/keycode';
 
+
+const toggleDisabled = (target, current, value) => {
+	if (current === value) {
+		return target.setAttribute('disabled', true);
+	}
+
+	return target.removeAttribute('disabled');
+};
+
 export default class SpinButton {
 	constructor(element) {
 		this.rootElement = element;
@@ -22,7 +31,7 @@ export default class SpinButton {
 			text: '',
 		};
 
-		console.log(this.value);
+		// console.log(this.value);
 
 		// Bind.
 		this.onKeyDown = this.onKeyDown.bind(this);
@@ -49,8 +58,7 @@ export default class SpinButton {
 		const key = event.keyCode || event.which;
 
 		const setValue = value => {
-			console.log('setValue');
-
+			event.preventDefault();
 			this.setValue(value);
 		};
 
@@ -81,7 +89,8 @@ export default class SpinButton {
 		this.value.now = current;
 		this.value.text = current;
 
-		console.log(current);
+		toggleDisabled(this.$increase, current, this.value.max);
+		toggleDisabled(this.$decrease, current, this.value.min);
 
 		this.$input.setAttribute('aria-valuenow', this.value.now);
 		this.$input.setAttribute('aria-valuetext', this.value.text);
