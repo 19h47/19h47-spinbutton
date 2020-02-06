@@ -25,9 +25,9 @@ export default class SpinButton {
 		this.$decrease = this.rootElement.querySelector('.js-decrease');
 
 		this.value = {
-			min: JSON.parse(this.rootElement.getAttribute('aria-valuemin')) || 0,
-			max: JSON.parse(this.rootElement.getAttribute('aria-valuemax')) || 10,
-			now: JSON.parse(this.rootElement.getAttribute('aria-valuenow')) || 5,
+			min: JSON.parse(this.rootElement.getAttribute('aria-valuemin')),
+			max: JSON.parse(this.rootElement.getAttribute('aria-valuemax')),
+			now: JSON.parse(this.rootElement.getAttribute('aria-valuenow')),
 			text: '',
 		};
 
