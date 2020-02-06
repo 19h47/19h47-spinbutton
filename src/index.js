@@ -96,5 +96,9 @@ export default class SpinButton {
 		this.$input.setAttribute('aria-valuetext', this.value.text);
 		this.$input.setAttribute('value', this.value.now);
 		this.$input.value = this.value.now;
+
+		const changeEvent = new CustomEvent('SpinButton.change', { detail: { value: current } });
+
+		this.rootElement.dispatchEvent(changeEvent);
 	}
 }

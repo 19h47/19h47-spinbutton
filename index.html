@@ -43,6 +43,12 @@
 
 			const spinbutton = new SpinButton.default($spinbutton);
 			spinbutton.init();
+
+			$spinbutton.addEventListener('SpinButton.change', (event) => {
+				const { detail: { value } } = event;
+
+				console.log(value);
+			});
 		})();
 	</script>
 </body>
