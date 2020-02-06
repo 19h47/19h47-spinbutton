@@ -17,15 +17,15 @@
 					</a>
 				</h1>
 			</div>
-			<div class="col-4">
+			<div class="col-12">
 				<h2 id="title">Increase/Decrease</h2>
-				<div class="js-spinbutton" role="spinbutton" aria-valuemin="0" aria-valuemax="100" aria-valuenow="5">
+				<div class="js-spinbutton" role="spinbutton" aria-valuemin="0" aria-valuemax="100" aria-valuenow="1">
 					<div class="input-group">
 						<div class="input-group-prepend">
 							<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">-</button>
 						</div>
 
-						<input type="text" class="form-control" placeholder="5"/>
+						<input type="text" class="form-control"/>
 
 						<div class="input-group-append">
 							<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">+</button>
@@ -44,7 +44,7 @@
 			const spinbutton = new SpinButton.default($spinbutton);
 			spinbutton.init();
 
-			$spinbutton.addEventListener('SpinButton.change', (event) => {
+			$spinbutton.addEventListener('SpinButton.change', event => {
 				const { detail: { value } } = event;
 
 				console.log(value);
