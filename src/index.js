@@ -7,6 +7,8 @@ import {
 	END,
 } from '@19h47/keycode';
 
+import EventDispatcher from './EventDispatcher';
+
 
 const toggleDisabled = (target, current, value) => {
 	if (current === value) {
@@ -16,8 +18,14 @@ const toggleDisabled = (target, current, value) => {
 	return target.removeAttribute('disabled');
 };
 
-export default class SpinButton {
+const setAttributes = (element, attributes) => {
+	Object.keys(attributes).map(key => element.setAttribute(key, attributes[key]));
+};
+
+export default class SpinButton extends EventDispatcher {
 	constructor(element) {
+		super(['SpinButton.change'], element);
+
 		this.rootElement = element;
 
 		this.$input = this.rootElement.querySelector('input[type="text"]');
@@ -92,13 +100,14 @@ export default class SpinButton {
 		toggleDisabled(this.$increase, current, this.value.max);
 		toggleDisabled(this.$decrease, current, this.value.min);
 
-		this.$input.setAttribute('aria-valuenow', this.value.now);
-		this.$input.setAttribute('aria-valuetext', this.value.text);
-		this.$input.setAttribute('value', this.value.now);
+		setAttributes(this.$input, {
+			'aria-valuenow': this.value.now,
+			'aria-valuetext': this.value.text,
+			value: this.value.now,
+		});
+
 		this.$input.value = this.value.now;
 
-		const changeEvent = new CustomEvent('SpinButton.change', { detail: { value: current } });
-
-		this.rootElement.dispatchEvent(changeEvent);
+		this.emit('SpinButton.change', current);
 	}
 }
