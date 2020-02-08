@@ -13,7 +13,7 @@
 			<div class="col-12">
 				<h1 class="my-5">
 					<a href="https://github.com/19h47/19h47-spinbutton">
-						Spinbutton
+						Spinbutton<sup class="js-value">0</sup>
 					</a>
 				</h1>
 			</div>
@@ -40,11 +40,14 @@
 	<script>
 		(() => {
 			const $spinbutton = document.querySelector('.js-spinbutton');
+			const $value = document.querySelector('.js-value');
 
 			const spinbutton = new SpinButton.default($spinbutton);
 			spinbutton.init();
 
-			spinbutton.on('SpinButton.change', value => console.log(value));
+			spinbutton.on('SpinButton.change', value => {
+				$value.innerHTML = value;
+			});
 		})();
 	</script>
 </body>
