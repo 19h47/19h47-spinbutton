@@ -50,6 +50,7 @@
 	},
 	"dependencies": {
 		"@19h47/keycode": "3.0.0",
+		"@19h47/prettier-config": "^1.0.0",
 		"core-js": "^3.6.4"
 	}
 }
