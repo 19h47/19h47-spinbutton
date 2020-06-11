@@ -1,14 +1,6 @@
-import {
-	ARROW_DOWN,
-	ARROW_UP,
-	PAGE_DOWN,
-	PAGE_UP,
-	HOME,
-	END,
-} from '@19h47/keycode';
+import { ARROW_DOWN, ARROW_UP, PAGE_DOWN, PAGE_UP, HOME, END } from '@19h47/keycode';
 
 import EventDispatcher from './EventDispatcher';
-
 
 const toggleDisabled = (target, current, value) => {
 	if (current === value) {
@@ -19,6 +11,7 @@ const toggleDisabled = (target, current, value) => {
 };
 
 const setAttributes = (element, attributes) => {
+	console.log(element);
 	Object.keys(attributes).map(key => element.setAttribute(key, attributes[key]));
 };
 
@@ -29,6 +22,10 @@ export default class SpinButton extends EventDispatcher {
 		this.rootElement = element;
 
 		this.$input = this.rootElement.querySelector('input[type="text"]');
+
+		console.log(element);
+		console.log(this.$input);
+
 		this.$increase = this.rootElement.querySelector('.js-increase');
 		this.$decrease = this.rootElement.querySelector('.js-decrease');
 
@@ -38,8 +35,6 @@ export default class SpinButton extends EventDispatcher {
 			now: JSON.parse(this.rootElement.getAttribute('aria-valuenow')),
 			text: '',
 		};
-
-		// console.log(this.value);
 
 		// Bind.
 		this.onKeyDown = this.onKeyDown.bind(this);
@@ -99,6 +94,8 @@ export default class SpinButton extends EventDispatcher {
 
 		toggleDisabled(this.$increase, current, this.value.max);
 		toggleDisabled(this.$decrease, current, this.value.min);
+
+		console.log(this.$input);
 
 		setAttributes(this.$input, {
 			'aria-valuenow': this.value.now,

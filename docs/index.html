@@ -1,4 +1,47 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta http-equiv="X-UA-Compatible" content="ie=edge"/><title>Spinbutton</title><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/></head><body><div class="container"><div class="row"><div class="col-12"><h1 class="my-5"><a href="https://github.com/19h47/19h47-spinbutton">Spinbutton<sup class="js-value">10</sup></a></h1></div><div class="col-12 col-md-4"><h2 id="title">Increase/Decrease</h2><div class="js-spinbutton" role="spinbutton" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10"><div class="input-group"><div class="input-group-prepend"><button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">-</button></div><input class="form-control"/><div class="input-group-append"><button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">+</button></div></div></div></div></div></div><script src="main.js"></script><script>(() => {
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Spinbutton</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<h1 class="my-5">
+						<a href="https://github.com/19h47/19h47-spinbutton">
+							Spinbutton<sup class="js-value">10</sup>
+						</a>
+					</h1>
+				</div>
+				<div class="col-12 col-md-4">
+					<h2 id="title">Increase/Decrease</h2>
+					<div class="js-spinbutton" role="spinbutton" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
+									-
+								</button>
+							</div>
+
+							<input type="text" class="form-control">
+
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
+									+
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="main.js"></script>
+		<script>
+			(() => {
 				const $spinbutton = document.querySelector('.js-spinbutton');
 				const $value = document.querySelector('.js-value');
 
@@ -9,4 +52,7 @@
 				spinbutton.on('SpinButton.change', value => {
 					$value.innerHTML = value;
 				});
-			})();</script></body></html>
+			})();
+		</script>
+	</body>
+</html>
