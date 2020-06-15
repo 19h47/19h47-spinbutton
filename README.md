@@ -21,6 +21,12 @@ The spin buttons provide the following keyboard support described in the [spin b
 | Home       | Decreases to mimimum value.  |
 | End        | Increases to maximum value.  |
 
+## Role, Property, State, and Tabindex Attributes
+
+| Role         | Attribute | Element | Usage                                                                                                                                                                                                            |
+| ------------ | --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `spinbutton` |           | `div`   | <ul><li>Identifies the `div` as a group.</li><li>The group provides a means to inform assistive technology users that the three spin buttons are all related to the single purpose of choosing a date.</li></ul> |
+
 ## HTML Source Code
 
 ```html

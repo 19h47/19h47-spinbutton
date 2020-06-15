@@ -1,6 +1,6 @@
 {
 	"name": "@19h47/spinbutton",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "SpinButton",
 	"main": "dist/main.js",
 	"scripts": {
@@ -35,7 +35,7 @@
 		"clean-webpack-plugin": "^3.0.0",
 		"core-js": "^3.6.4",
 		"eslint": "^7.2.0",
-		"eslint-config-airbnb-base": "^14.1.0",
+		"eslint-config-airbnb-base": "^14.2.0",
 		"eslint-config-prettier": "^6.11.0",
 		"eslint-config-standard": "^14.1.0",
 		"eslint-import-resolver-webpack": "^0.12.1",

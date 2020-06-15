@@ -11,7 +11,6 @@ const toggleDisabled = (target, current, value) => {
 };
 
 const setAttributes = (element, attributes) => {
-	console.log(element);
 	Object.keys(attributes).map(key => element.setAttribute(key, attributes[key]));
 };
 
@@ -22,9 +21,6 @@ export default class SpinButton extends EventDispatcher {
 		this.rootElement = element;
 
 		this.$input = this.rootElement.querySelector('input[type="text"]');
-
-		console.log(element);
-		console.log(this.$input);
 
 		this.$increase = this.rootElement.querySelector('.js-increase');
 		this.$decrease = this.rootElement.querySelector('.js-decrease');
@@ -78,6 +74,18 @@ export default class SpinButton extends EventDispatcher {
 		return (codes[key] || codes.default)();
 	}
 
+	setMin(value) {
+		this.value.min = value;
+		this.rootElement.setAttribute('aria-valuemin', value);
+		this.setValue(this.value.now);
+	}
+
+	setMax(value) {
+		this.value.max = value;
+		this.rootElement.setAttribute('aria-valuemax', value);
+		this.setValue(this.value.now);
+	}
+
 	setValue(value) {
 		let current = value;
 
@@ -94,8 +102,6 @@ export default class SpinButton extends EventDispatcher {
 
 		toggleDisabled(this.$increase, current, this.value.max);
 		toggleDisabled(this.$decrease, current, this.value.min);
-
-		console.log(this.$input);
 
 		setAttributes(this.$input, {
 			'aria-valuenow': this.value.now,

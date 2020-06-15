@@ -18,8 +18,8 @@ function resolve(dir) {
 
 module.exports = {
 	entry: {
-		dist: resolve('src/index.js'),
-		docs: resolve('src/index.js'),
+		dist: resolve('src/SpinButton.js'),
+		docs: resolve('src/SpinButton.js'),
 	},
 	output: {
 		library: 'SpinButton',
