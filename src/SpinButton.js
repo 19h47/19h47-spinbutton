@@ -1,4 +1,5 @@
 import { ARROW_DOWN, ARROW_UP, PAGE_DOWN, PAGE_UP, HOME, END } from '@19h47/keycode';
+import clamp from '@19h47/clamp';
 
 import EventDispatcher from './EventDispatcher';
 
@@ -75,33 +76,25 @@ export default class SpinButton extends EventDispatcher {
 	}
 
 	setMin(value) {
-		this.value.min = value;
+		this.value.min = parseInt(value, 10);
 		this.rootElement.setAttribute('aria-valuemin', value);
 		this.setValue(this.value.now);
 	}
 
 	setMax(value) {
-		this.value.max = value;
+		this.value.max = parseInt(value, 10);
 		this.rootElement.setAttribute('aria-valuemax', value);
 		this.setValue(this.value.now);
 	}
 
 	setValue(value) {
-		let current = value;
+		const current = parseInt(value, 10);
 
-		if (current > this.value.max) {
-			current = this.value.max;
-		}
+		this.value.now = clamp(current, this.value.min, this.value.max);
+		this.value.text = this.value.now;
 
-		if (current < this.value.min) {
-			current = this.value.min;
-		}
-
-		this.value.now = current;
-		this.value.text = current;
-
-		toggleDisabled(this.$increase, current, this.value.max);
-		toggleDisabled(this.$decrease, current, this.value.min);
+		toggleDisabled(this.$increase, this.value.now, this.value.max);
+		toggleDisabled(this.$decrease, this.value.now, this.value.min);
 
 		setAttributes(this.$input, {
 			'aria-valuenow': this.value.now,
@@ -111,6 +104,6 @@ export default class SpinButton extends EventDispatcher {
 
 		this.$input.value = this.value.now;
 
-		this.emit('SpinButton.change', current);
+		this.emit('SpinButton.change', this.value.now);
 	}
 }

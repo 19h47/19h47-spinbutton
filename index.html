@@ -105,7 +105,7 @@
 									<input
 										class="form-control js-control-now"
 										type="number"
-										value="100"
+										value="1"
 										min="1"
 										step="1"
 									/>
@@ -534,12 +534,11 @@
 					if ($max) {
 						$max.addEventListener('input', event => {
 							const { value } = event.target;
-							const max = parseInt(value, 10);
 
-							if (max) {
-								$min.setAttribute('max', max);
-								$now.setAttribute('max', max);
-								spinbutton.setMax(max);
+							if (value) {
+								$min.setAttribute('max', value);
+								$now.setAttribute('max', value);
+								spinbutton.setMax(value);
 							}
 						});
 					}
@@ -547,12 +546,11 @@
 					if ($min) {
 						$min.addEventListener('input', event => {
 							const { value } = event.target;
-							const min = parseInt(value, 10);
 
-							if (min) {
-								$max.setAttribute('min', min);
-								$now.setAttribute('min', min);
-								spinbutton.setMin(min);
+							if (value) {
+								$max.setAttribute('min', value);
+								$now.setAttribute('min', value);
+								spinbutton.setMin(value);
 							}
 						});
 					}
@@ -560,10 +558,9 @@
 					if ($now) {
 						$now.addEventListener('input', event => {
 							const { value } = event.target;
-							const now = parseInt(value, 10);
 
-							if (now) {
-								spinbutton.setValue(now);
+							if (value) {
+								spinbutton.setValue(value);
 							}
 						});
 					}

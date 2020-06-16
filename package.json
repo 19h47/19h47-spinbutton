@@ -53,6 +53,7 @@
 		"webpack-notifier": "^1.8.0"
 	},
 	"dependencies": {
+		"@19h47/clamp": "^1.0.0",
 		"@19h47/keycode": "3.0.0"
 	}
 }
