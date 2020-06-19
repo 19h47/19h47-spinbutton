@@ -43,4 +43,6 @@ The spin buttons provide the following keyboard support described in the [spin b
 </div>
 ```
 
+## References
+
 [Spin Button Design Pattern in WAI-ARIA Authoring Practices 1.1](https://www.w3.org/TR/wai-aria-practices/#spinbutton)
