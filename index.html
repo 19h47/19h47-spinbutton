@@ -153,17 +153,7 @@
 				<div class="row">
 					<div class="col-12">
 						<h2>Character</h2>
-						<select id="classes" class="custom-select" name="classes" id="">
-							<option value="fighter">Fighter</option>
-							<option value="paladin">Paladin</option>
-							<option value="paladin">Ranger</option>
-							<option value="mage">Mage</option>
-							<option value="illusionist">Illusionist</option>
-							<option value="cleric">Cleric</option>
-							<option value="druid">Druid</option>
-							<option value="thief">Thief</option>
-							<option value="bard">Bard</option>
-						</select>
+						<select id="classes" class="custom-select" name="classes"></select>
 					</div>
 
 					<div
@@ -179,6 +169,7 @@
 						<div class="d-flex">
 							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
 							<div
+								class="w-100"
 								id="strength"
 								role="spinbutton"
 								aria-valuemin="3"
@@ -226,6 +217,7 @@
 						<div class="d-flex">
 							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
 							<div
+								class="w-100"
 								id="dexterity"
 								role="spinbutton"
 								aria-valuemin="3"
@@ -274,6 +266,7 @@
 						<div class="d-flex">
 							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
 							<div
+								class="w-100"
 								id="constitution"
 								role="spinbutton"
 								aria-valuemin="3"
@@ -322,6 +315,7 @@
 						<div class="d-flex">
 							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
 							<div
+								class="w-100"
 								id="intelligence"
 								role="spinbutton"
 								aria-valuemin="3"
@@ -369,6 +363,7 @@
 						<div class="d-flex">
 							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
 							<div
+								class="w-100"
 								id="wisdom"
 								role="spinbutton"
 								aria-valuemin="3"
@@ -417,6 +412,7 @@
 						<div class="d-flex">
 							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
 							<div
+								class="w-100"
 								id="charisma"
 								role="spinbutton"
 								aria-valuemin="3"
@@ -456,10 +452,15 @@
 		</div>
 		<script src="main.js"></script>
 		<script>
-			const classes = {
+			const scores = {
+				rogue: {},
+				sorcerer: {},
+				barbarian: {},
+				warlock: {},
 				fighter: {
 					strength: 9,
 				},
+				monk: {},
 				paladin: {
 					strength: 12,
 					constitution: 9,
@@ -475,6 +476,7 @@
 				mage: {
 					intelligence: 9,
 				},
+				wizard: {},
 				illusionist: {
 					dexterity: 16,
 				},
@@ -495,96 +497,109 @@
 				},
 			};
 
-			(() => {
-				const spinbuttons = [];
-				const $classes = document.getElementById('classes');
-				const roll = face => Math.floor(Math.random() * face + 1);
+			const url = 'https://www.dnd5eapi.co';
+			const spinbuttons = [];
+			const $classes = document.getElementById('classes');
+			const roll = face => Math.floor(Math.random() * face + 1);
 
-				[...document.querySelectorAll('.js-spinbutton')].forEach($el => {
-					const $value = $el.querySelector('.js-value');
-					const $spinbutton = $el.querySelector('[role="spinbutton"]');
-					const $dice = $el.querySelector('.js-dice') || false;
-					const stats = 3 * roll(6);
+			const getClasses = async () => {
+				let response = await fetch(`${url}/api/classes`);
+				let data = await response.json();
 
-					// Controls
-					const $max = $el.querySelector('.js-control-max') || false;
-					const $min = $el.querySelector('.js-control-min') || false;
-					const $now = $el.querySelector('.js-control-now') || false;
+				return data;
+			};
 
-					const spinbutton = new SpinButton.default($spinbutton);
+			getClasses().then(data => {
+				data.results.forEach((characterClass, index) => {
+					// Option
+					$classes[index] = new Option(characterClass.name, characterClass.index);
+				});
+			});
 
-					spinbutton.on('SpinButton.change', value => {
-						$value.innerHTML = value;
-					});
+			[...document.querySelectorAll('.js-spinbutton')].forEach($el => {
+				const $value = $el.querySelector('.js-value');
+				const $spinbutton = $el.querySelector('[role="spinbutton"]');
+				const $dice = $el.querySelector('.js-dice') || false;
+				const stats = 3 * roll(6);
 
-					spinbutton.init();
-					spinbutton.$requirement = $el.querySelector('.js-requirement') || false;
+				// Controls
+				const $max = $el.querySelector('.js-control-max') || false;
+				const $min = $el.querySelector('.js-control-min') || false;
+				const $now = $el.querySelector('.js-control-now') || false;
 
-					if ($dice) {
-						spinbuttons.push(spinbutton);
-						spinbutton.setValue(stats);
+				const spinbutton = new SpinButton.default($spinbutton);
 
-						$dice.addEventListener('click', () => {
-							const stats = 3 * roll(6);
-
-							spinbutton.setValue(stats);
-						});
-					}
-
-					if ($max) {
-						$max.addEventListener('input', event => {
-							const { value } = event.target;
-
-							if (value) {
-								$min.setAttribute('max', value);
-								$now.setAttribute('max', value);
-								spinbutton.setMax(value);
-							}
-						});
-					}
-
-					if ($min) {
-						$min.addEventListener('input', event => {
-							const { value } = event.target;
-
-							if (value) {
-								$max.setAttribute('min', value);
-								$now.setAttribute('min', value);
-								spinbutton.setMin(value);
-							}
-						});
-					}
-
-					if ($now) {
-						$now.addEventListener('input', event => {
-							const { value } = event.target;
-
-							if (value) {
-								spinbutton.setValue(value);
-							}
-						});
-					}
+				spinbutton.on('SpinButton.change', value => {
+					$value.innerHTML = value;
 				});
 
-				$classes.addEventListener('change', event => {
-					const { value } = event.target.options[event.target.selectedIndex];
-					const ability = document.getElementById(value);
+				spinbutton.init();
+				spinbutton.$requirement = $el.querySelector('.js-requirement') || false;
 
-					spinbuttons.map(spinbutton => {
-						const { rootElement, $requirement } = spinbutton;
-						const requirements = [];
+				if ($dice) {
+					spinbuttons.push(spinbutton);
+					spinbutton.setValue(stats);
 
-						spinbutton.setMin(3);
-						$requirement.innerHTML = '';
+					$dice.addEventListener('click', () => {
+						const stats = 3 * roll(6);
 
-						if (rootElement.id in classes[value]) {
-							spinbutton.setMin(classes[value][rootElement.id]);
+						spinbutton.setValue(stats);
+					});
+				}
 
-							$requirement.innerHTML = ` (${classes[value][rootElement.id]})`;
+				if ($max) {
+					$max.addEventListener('input', event => {
+						const { value } = event.target;
+
+						if (value) {
+							$min.setAttribute('max', value);
+							$now.setAttribute('max', value);
+							spinbutton.setMax(value);
 						}
 					});
+				}
+
+				if ($min) {
+					$min.addEventListener('input', event => {
+						const { value } = event.target;
+
+						if (value) {
+							$max.setAttribute('min', value);
+							$now.setAttribute('min', value);
+							spinbutton.setMin(value);
+						}
+					});
+				}
+
+				if ($now) {
+					$now.addEventListener('input', event => {
+						const { value } = event.target;
+
+						if (value) {
+							spinbutton.setValue(value);
+						}
+					});
+				}
+			});
+
+			$classes.addEventListener('change', event => {
+				const { value } = event.target.options[event.target.selectedIndex];
+				const ability = document.getElementById(value);
+
+				spinbuttons.map(spinbutton => {
+					const { rootElement, $requirement } = spinbutton;
+					const requirements = [];
+
+					spinbutton.setMin(3);
+					$requirement.innerHTML = '';
+
+					if (rootElement.id in scores[value]) {
+						spinbutton.setMin(scores[value][rootElement.id]);
+
+						$requirement.innerHTML = ` (${scores[value][rootElement.id]})`;
+					}
 				});
-			})();
+			});
 		</script>
 	</body>
 </html>
