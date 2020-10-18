@@ -8,7 +8,7 @@ A spinbutton is an input widget that restricts its value to a set or range of di
 <div role="spinbutton" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10">
 	<button class="js-decrease" tabindex="-1" aria-label="decrease" type="button">-</button>
 
-	<input type="text" />
+	<input type="number" />
 
 	<button class="js-increase" tabindex="-1" aria-label="increase" type="button">+</button>
 </div>
@@ -43,6 +43,12 @@ spinbutton.on('SpinButton.change', value => {
 	console.log(value);
 });
 ```
+
+## Options
+
+| Option | Type   |                                                                                                   |
+| ------ | ------ | ------------------------------------------------------------------------------------------------- |
+| `text` | object | Object containing _single_ and _plural_ text. Can be set as data attribute `data-spinbutton-text` |
 
 ## Keyboard Support
 

@@ -15,8 +15,16 @@ const setAttributes = (element, attributes) => {
 	Object.keys(attributes).map(key => element.setAttribute(key, attributes[key]));
 };
 
+const setText = (now, append) => {
+	if (append) {
+		return `${now} ${1 >= now ? append.single : append.plural}`;
+	}
+
+	return now;
+};
+
 export default class SpinButton extends EventDispatcher {
-	constructor(element) {
+	constructor(element, options = {}) {
 		super(['SpinButton.change'], element);
 
 		this.rootElement = element;
@@ -26,11 +34,18 @@ export default class SpinButton extends EventDispatcher {
 		this.$increase = this.rootElement.querySelector('.js-increase');
 		this.$decrease = this.rootElement.querySelector('.js-decrease');
 
+		const now = JSON.parse(this.rootElement.getAttribute('aria-valuenow'));
+
+		this.text =
+			JSON.parse(this.rootElement.getAttribute('data-spinbutton-text')) ||
+			options.text ||
+			false;
+
 		this.value = {
 			min: JSON.parse(this.rootElement.getAttribute('aria-valuemin')),
 			max: JSON.parse(this.rootElement.getAttribute('aria-valuemax')),
-			now: JSON.parse(this.rootElement.getAttribute('aria-valuenow')),
-			text: '',
+			now,
+			text: setText(now, this.text),
 		};
 
 		// Bind.
@@ -91,15 +106,14 @@ export default class SpinButton extends EventDispatcher {
 		const current = parseInt(value, 10);
 
 		this.value.now = clamp(current, this.value.min, this.value.max);
-		this.value.text = this.value.now;
+		this.value.text = setText(this.value.now, this.text);
 
 		toggleDisabled(this.$increase, this.value.now, this.value.max);
 		toggleDisabled(this.$decrease, this.value.now, this.value.min);
 
-		setAttributes(this.$input, {
+		setAttributes(this.rootElement, {
 			'aria-valuenow': this.value.now,
 			'aria-valuetext': this.value.text,
-			value: this.value.now,
 		});
 
 		this.$input.value = this.value.now;
