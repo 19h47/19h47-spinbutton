@@ -58,6 +58,7 @@ module.exports = {
 			filename: resolve('docs/index.html'),
 			template: resolve('index.html'),
 			inject: false,
+			minify: { removeRedundantAttributes: false },
 		}),
 		new WebpackNotifierPlugin({
 			title: 'Webpack',
