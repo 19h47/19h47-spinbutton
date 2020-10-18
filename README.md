@@ -2,11 +2,35 @@
 
 A spinbutton is an input widget that restricts its value to a set or range of discrete values.
 
+## JavaScript
+
+```javascript
+import SpinButton from '@19h47/spinbutton';
+
+const $element = document.querySelector('[role="spinbutton"]');
+const spinbutton = new SpinButton($element);
+
+spinbutton.init();
+```
+
 ## Events
 
 | Event             | Args  | Description                       |
 | ----------------- | ----- | --------------------------------- |
 | SpinButton.change | value | Return the current activate value |
+
+```javascript
+import SpinButton from '@19h47/spinbutton';
+
+const $element = document.querySelector('[role="spinbutton"]');
+const spinbutton = new SpinButton($element);
+
+spinbutton.init();
+
+spinbutton.on('SpinButton.change', value => {
+	console.log(value);
+});
+```
 
 ## Keyboard Support
 
@@ -31,15 +55,11 @@ The spin buttons provide the following keyboard support described in the [spin b
 
 ```html
 <div role="spinbutton" aria-valuemin="0" aria-valuemax="100" aria-valuenow="10">
-	<button class="js-decrease" tabindex="-1" aria-label="decrease" type="button">
-		-
-	</button>
+	<button class="js-decrease" tabindex="-1" aria-label="decrease" type="button">-</button>
 
 	<input type="text" />
 
-	<button class="js-increase" tabindex="-1" aria-label="increase" type="button">
-		+
-	</button>
+	<button class="js-increase" tabindex="-1" aria-label="increase" type="button">+</button>
 </div>
 ```
 

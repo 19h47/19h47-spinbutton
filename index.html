@@ -9,15 +9,23 @@
 			rel="stylesheet"
 			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 		/>
+		<style>
+			.Alert {
+				margin: 1em;
+				position: fixed;
+				top: 0;
+				right: 0;
+				z-index: 10;
+			}
+		</style>
 	</head>
 	<body>
+		<div class="Alert js-alert"></div>
 		<div class="container">
 			<div class="row my-5">
 				<div class="col-12">
 					<h1 class="m-0">
-						<a href="https://github.com/19h47/19h47-spinbutton">
-							Spinbutton
-						</a>
+						<a href="https://github.com/19h47/19h47-spinbutton"> Spinbutton </a>
 					</h1>
 				</div>
 			</div>
@@ -516,6 +524,34 @@
 				});
 			});
 
+			const alert = content => {
+				const div = document.createElement('div');
+
+				div.className = 'toast fade show';
+				div.style = 'toast fade show';
+				div.innerHTML = `<div class="toast-body">${content}</div>`;
+
+				div.setAttribute('role', 'alert');
+				div.setAttribute('aria-live', 'assertive');
+				div.setAttribute('aria-atomic', 'true');
+
+				return div;
+			};
+			const $alert = document.querySelector('.js-alert');
+			const onSpinButtonChange = content => {
+				const $el = alert(content);
+
+				$alert.appendChild($el);
+
+				$el.addEventListener(
+					'click',
+					() => $el.style.setProperty('display', 'none'),
+					false,
+				);
+
+				setTimeout(() => $el.parentNode.removeChild($el), 2000);
+			};
+
 			[...document.querySelectorAll('.js-spinbutton')].forEach($el => {
 				const $value = $el.querySelector('.js-value');
 				const $spinbutton = $el.querySelector('[role="spinbutton"]');
@@ -531,6 +567,8 @@
 
 				spinbutton.on('SpinButton.change', value => {
 					$value.innerHTML = value;
+
+					onSpinButtonChange(value);
 				});
 
 				spinbutton.init();
@@ -586,7 +624,7 @@
 				const { value } = event.target.options[event.target.selectedIndex];
 				const ability = document.getElementById(value);
 
-				spinbuttons.map(spinbutton => {
+				spinbuttons.forEach(spinbutton => {
 					const { rootElement, $requirement } = spinbutton;
 					const requirements = [];
 
