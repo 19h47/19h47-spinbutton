@@ -1,7 +1,7 @@
 import { ARROW_DOWN, ARROW_UP, PAGE_DOWN, PAGE_UP, HOME, END } from '@19h47/keycode';
 import clamp from '@19h47/clamp';
 
-import EventDispatcher from './EventDispatcher';
+import { EventEmitter } from 'events';
 
 const toggleDisabled = (target, current, value) => {
 	if (current === value) {
@@ -23,9 +23,9 @@ const setText = (now, append) => {
 	return now;
 };
 
-export default class SpinButton extends EventDispatcher {
+export default class SpinButton extends EventEmitter {
 	constructor(element, options = {}) {
-		super(['SpinButton.change'], element);
+		super();
 
 		this.rootElement = element;
 
