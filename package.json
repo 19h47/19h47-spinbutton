@@ -1,6 +1,6 @@
 {
 	"name": "@19h47/spinbutton",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "SpinButton",
 	"main": "dist/main.js",
 	"scripts": {
