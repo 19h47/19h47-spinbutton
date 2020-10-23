@@ -49,7 +49,9 @@ export default class SpinButton extends EventEmitter {
 		};
 
 		// Bind.
-		this.onKeyDown = this.onKeyDown.bind(this);
+		this.handleKeydown = this.handleKeydown.bind(this);
+		this.handleClick = this.handleClick.bind(this);
+		this.handleInput = this.handleInput.bind(this);
 	}
 
 	init() {
@@ -58,18 +60,21 @@ export default class SpinButton extends EventEmitter {
 	}
 
 	initEvents() {
-		this.rootElement.addEventListener('keydown', this.onKeyDown);
-		this.$increase.addEventListener('click', () => this.setValue(this.value.now + 1));
-		this.$decrease.addEventListener('click', () => this.setValue(this.value.now - 1));
-		this.$input.addEventListener('input', event => {
-			const { target } = event;
-			const value = parseInt(target.value, 10) || 0;
-
-			this.setValue(value);
-		});
+		this.rootElement.addEventListener('keydown', this.handleKeydown);
+		this.$increase.addEventListener('click', () => this.handleClick(this.value.now + 1));
+		this.$decrease.addEventListener('click', () => this.handleClick(this.value.now - 1));
+		this.$input.addEventListener('input', this.handleInput);
 	}
 
-	onKeyDown(event) {
+	handleClick = value => this.setValue(value);
+
+	handleInput({ target }) {
+		const value = parseInt(target.value, 10) || 0;
+
+		this.setValue(value);
+	}
+
+	handleKeydown(event) {
 		const key = event.keyCode || event.which;
 
 		const setValue = value => {
