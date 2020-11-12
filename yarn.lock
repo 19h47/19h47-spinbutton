@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@19h47/clamp@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@19h47/clamp/-/clamp-1.0.2.tgz#dc88fec5b7fa1937487580addd1b15d62aabf858"
-  integrity sha512-PMT/lgSpLMso5LljnRCRv6rclumWgBEwpUayAIO7/eD2tb51nkbGUh4VVNRTgD1lxzS4Rv99J8jHK5OJzCyP1A==
+"@19h47/clamp@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@19h47/clamp/-/clamp-1.0.3.tgz#fed49bac53751be52b5575ebfc8cd5c486c9679f"
+  integrity sha512-yJMH20EN03RyS4CvefFikwV4deYSwM47vWAx75v227eZvhpRQEvnOG1cwg66wCNIaDo9aeK2qHuUSGRDIoWhZg==
 
 "@19h47/keycode@3.0.3":
   version "3.0.3"
@@ -2631,10 +2631,10 @@ eslint-plugin-promise@^4.2.1:
   resolved "https://registry.yarnpkg.com/eslint-plugin-promise/-/eslint-plugin-promise-4.2.1.tgz#845fd8b2260ad8f82564c1222fce44ad71d9418a"
   integrity sha512-VoM09vT7bfA7D+upt+FjeBO5eHIJQBUWki1aPvB+vbNiHS3+oGIJGIeyBtKQTME6UPXXy3vV07OL1tHd3ANuDw==
 
-eslint-plugin-standard@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-standard/-/eslint-plugin-standard-4.0.2.tgz#021211a9f077e63a6847e7bb9ab4247327ac8e0c"
-  integrity sha512-nKptN8l7jksXkwFk++PhJB3cCDTcXOEyhISIN86Ue2feJ1LFyY3PrY3/xT2keXlJSY5bpmbiTG0f885/YKAvTA==
+eslint-plugin-standard@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-standard/-/eslint-plugin-standard-4.1.0.tgz#0c3bf3a67e853f8bbbc580fb4945fbf16f41b7c5"
+  integrity sha512-ZL7+QRixjTR6/528YNGyDotyffm5OQst/sGxKDwGb9Uqs4In5Egi4+jbobhqJoyoCM6/7v/1A5fhQ7ScMtDjaQ==
 
 eslint-rule-composer@^0.3.0:
   version "0.3.0"

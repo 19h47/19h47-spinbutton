@@ -1,12 +1,12 @@
 {
 	"name": "@19h47/spinbutton",
-	"version": "0.3.2",
+	"version": "0.3.4",
 	"description": "SpinButton",
 	"main": "dist/main.js",
 	"scripts": {
 		"prod": "webpack --mode=production --config webpack/webpack.config.js",
 		"dev": "webpack --mode=development --config webpack/webpack.config.js",
-		"deploy": "npm login && npm run prod && npm publish",
+		"deploy": "npm login && npm run prod && npm publish --access public",
 		"start": "webpack-dev-server --mode=development --hot --config webpack/webpack.config.js"
 	},
 	"repository": {
@@ -43,7 +43,7 @@
 		"eslint-plugin-import": "^2.22.1",
 		"eslint-plugin-node": "^11.0.0",
 		"eslint-plugin-promise": "^4.2.1",
-		"eslint-plugin-standard": "^4.0.2",
+		"eslint-plugin-standard": "^4.1.0",
 		"html-webpack-plugin": "^4.5.0",
 		"prettier": "^2.1.2",
 		"webpack": "^4.44.2",
@@ -53,7 +53,7 @@
 		"webpack-notifier": "^1.8.0"
 	},
 	"dependencies": {
-		"@19h47/clamp": "^1.0.2",
+		"@19h47/clamp": "^1.0.3",
 		"@19h47/keycode": "3.0.3",
 		"@babel/eslint-plugin": "^7.12.1",
 		"@babel/plugin-proposal-class-properties": "^7.12.1",
