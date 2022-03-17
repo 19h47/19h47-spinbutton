@@ -95,19 +95,19 @@ export default class SpinButton extends EventEmitter {
 		return (codes[key] || codes.default)();
 	}
 
-	setMin(value) {
+	setMin(value, emit = true) {
 		this.value.min = parseInt(value, 10);
 		this.rootElement.setAttribute('aria-valuemin', value);
-		this.setValue(this.value.now);
+		this.setValue(this.value.now, emit);
 	}
 
-	setMax(value) {
+	setMax(value, emit = true) {
 		this.value.max = parseInt(value, 10);
 		this.rootElement.setAttribute('aria-valuemax', value);
-		this.setValue(this.value.now);
+		this.setValue(this.value.now, emit);
 	}
 
-	setValue(value) {
+	setValue(value, emit = true) {
 		const current = parseInt(value, 10);
 
 		this.value.now = clamp(current, this.value.min, this.value.max);
@@ -123,6 +123,8 @@ export default class SpinButton extends EventEmitter {
 
 		this.$input.value = this.value.now;
 
-		this.emit('SpinButton.change', this.value.now);
+		if (emit) {
+			this.emit('SpinButton.change', this.value.now);
+		}
 	}
 }
