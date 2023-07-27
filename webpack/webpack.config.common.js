@@ -15,8 +15,8 @@ const resolve = require('./webpack.utils');
 
 module.exports = {
 	entry: {
-		dist: resolve('src/SpinButton.js'),
-		docs: resolve('src/SpinButton.js'),
+		dist: resolve('src/index.js'),
+		docs: resolve('src/index.js'),
 	},
 	output: {
 		library: 'SpinButton',
