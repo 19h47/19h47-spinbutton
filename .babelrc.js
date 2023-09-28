@@ -2,11 +2,12 @@ const presets = [
 	[
 		'@babel/preset-env',
 		{
-			targets: '>0.25%',
+			useBuiltIns: 'entry',
+			corejs: '3.32.2',
 		},
 	],
 ];
 
-const plugins = ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties'];
+const plugins = ['@babel/plugin-transform-runtime'];
 
 module.exports = { presets, plugins };
