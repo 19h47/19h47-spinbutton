@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -669,16 +669,16 @@ spinbutton.init();</code></pre>
 				const { value } = event.target.options[event.target.selectedIndex];
 
 				spinbuttons.forEach(spinbutton => {
-					const { rootElement, $requirement } = spinbutton;
+					const { el, $requirement } = spinbutton;
 					const requirements = [];
 
 					spinbutton.setMin(3);
 					$requirement.innerHTML = '';
 
-					if (rootElement.id in scores[value]) {
-						spinbutton.setMin(scores[value][rootElement.id]);
+					if (el.id in scores[value]) {
+						spinbutton.setMin(scores[value][el.id]);
 
-						$requirement.innerHTML = ` (${scores[value][rootElement.id]})`;
+						$requirement.innerHTML = ` (${scores[value][el.id]})`;
 					}
 				});
 			});

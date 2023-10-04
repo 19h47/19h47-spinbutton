@@ -65,10 +65,10 @@ The spin buttons provide the following keyboard support described in the [spin b
 
 ## Role, Property, State, and Tabindex Attributes
 
-| Role         | Attribute | Element | Usage                                                                                                                                                                                                            |
-| ------------ | --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Role         | Attribute | Element | Usage                                         |
+| ------------ | --------- | ------- | --------------------------------------------- |
 | `spinbutton` |           | `div`   | Identifies the `div` element as a spinbutton. |
 
 ## References
 
-[Spin Button Design Pattern in WAI-ARIA Authoring Practices 1.1](https://www.w3.org/TR/wai-aria-practices/#spinbutton)
+[Spinbutton Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/)
