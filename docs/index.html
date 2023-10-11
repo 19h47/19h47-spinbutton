@@ -1,61 +1,154 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title>Spinbutton</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous">
-		<style>
-			.Alert {
-				margin: 1em;
-				position: fixed;
-				top: 0;
-				bottom: 0;
-				right: 0;
-				z-index: 10;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="Alert js-alert"></div>
-		<div class="container">
-			<div class="row my-5">
-				<div class="col-12">
-					<h1 class="m-0">
-						<a href="https://github.com/19h47/19h47-spinbutton"> Spinbutton </a>
-					</h1>
-				</div>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Spinbutton</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous">
+	<style>
+		.Alert {
+			margin: 1em;
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			z-index: 10;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="Alert js-alert"></div>
+	<div class="container">
+		<div class="row my-5">
+			<div class="col-12">
+				<h1 class="m-0">
+					<a href="https://github.com/19h47/19h47-spinbutton"> Spinbutton </a>
+				</h1>
 			</div>
-			<div class="row my-5">
-				<div class="col-12">
-					<pre class="p-3 mt-0 mb-3"><code class="language-html">&lt;div role=&quot;spinbutton&quot; aria-valuemin=&quot;0&quot; aria-valuemax=&quot;100&quot; aria-valuenow=&quot;10&quot;&gt;
+		</div>
+		<div class="row my-5">
+			<div class="col-12">
+				<pre class="p-3 mt-0 mb-3"><code class="language-html">&lt;div role=&quot;spinbutton&quot; aria-valuemin=&quot;0&quot; aria-valuemax=&quot;100&quot; aria-valuenow=&quot;10&quot;&gt;
 	&lt;button class=&quot;js-decrease&quot; tabindex=&quot;-1&quot; aria-label=&quot;decrease&quot; type=&quot;button&quot;&gt;-&lt;/button&gt;
 
 	&lt;input type=&quot;number&quot; /&gt;
 
 	&lt;button class=&quot;js-increase&quot; tabindex=&quot;-1&quot; aria-label=&quot;increase&quot; type=&quot;button&quot;&gt;+&lt;/button&gt;
 &lt;/div&gt;</code></pre>
-					<pre class="p-3 mb-0 mt-3"><code class="language-javascript">import SpinButton from '@19h47/spinbutton';
+				<pre class="p-3 mb-0 mt-3"><code class="language-javascript">import SpinButton from '@19h47/spinbutton';
 
 const $element = document.querySelector('[role="spinbutton"]');
 const spinbutton = new SpinButton($element);
 
 spinbutton.init();</code></pre>
-				</div>
 			</div>
-			<div class="border p-3 my-5">
-				<div class="row">
-					<div role="group" class="col-12 js-spinbutton" aria-labelledby="label-level">
-						<h2 id="label-level" class="mt-2">Level <sup class="js-value">1</sup></h2>
-						<p class="m3">
-							<code>{ text: { single: 'level', plural: 'levels' } }</code> or
-							<code>
+		</div>
+		<div class="border p-3 my-5">
+			<div class="row">
+				<div role="group" class="col-12 js-spinbutton" aria-labelledby="label-level">
+					<h2 id="label-level" class="mt-2">Level <sup class="js-value">1</sup></h2>
+					<p class="m3">
+						<code>{ text: { single: 'level', plural: 'levels' } }</code> or
+						<code>
 								data-spinbutton-text='{"single":"level","plural":"levels"}'
 							</code>
-						</p>
-						<div id="level" role="spinbutton" aria-valuemin="1" aria-valuemax="100" aria-valuenow="1" aria-valuetext="level 1" data-spinbutton-text='{"single":"level","plural":"levels"}'>
+					</p>
+					<div id="level" role="spinbutton" aria-valuemin="1" aria-valuemax="100" aria-valuenow="1" aria-valuetext="level 1" data-spinbutton-text='{"single":"level","plural":"levels"}'>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
+									-
+								</button>
+							</div>
+
+							<input type="text" class="form-control">
+
+							<div class="input-group-append">
+								<span class="input-group-text js-append"></span>
+							</div>
+
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
+									+
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border p-3 my-5">
+			<div class="row">
+				<div role="group" class="col-12 js-spinbutton" aria-labelledby="label-control">
+					<h2 id="label-control" class="mt-2">
+						Controls <sup class="js-value">1</sup>
+					</h2>
+					<div class="row my-3">
+						<div class="col-6">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Minimum</span>
+								</div>
+								<input class="form-control js-control-min" type="number" value="1" min="1" step="1">
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Maximum</span>
+								</div>
+								<input class="form-control js-control-max" type="number" value="100" min="1" step="1">
+							</div>
+						</div>
+						<div class="col-12 mt-3">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Now</span>
+								</div>
+								<input class="form-control js-control-now" type="number" value="1" min="1" step="1">
+							</div>
+						</div>
+					</div>
+
+					<div id="level" role="spinbutton" aria-valuemin="1" aria-valuemax="100" aria-valuenow="1">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
+									-
+								</button>
+							</div>
+
+							<input type="text" class="form-control">
+
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
+									+
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="border p-3 my-5">
+			<div class="row">
+				<div class="col-12">
+					<h2>Character</h2>
+					<select id="classes" class="custom-select" name="classes"></select>
+				</div>
+
+				<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-strength">
+					<h3 id="label-strength" class="mt-2">
+						Strength <sup class="js-value">12</sup><sup class="js-requirement"></sup>
+					</h3>
+
+					<div class="d-flex">
+						<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
+						<div class="w-100" id="strength" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
@@ -66,10 +159,6 @@ spinbutton.init();</code></pre>
 								<input type="text" class="form-control">
 
 								<div class="input-group-append">
-									<span class="input-group-text js-append"></span>
-								</div>
-
-								<div class="input-group-append">
 									<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
 										+
 									</button>
@@ -78,41 +167,14 @@ spinbutton.init();</code></pre>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="border p-3 my-5">
-				<div class="row">
-					<div role="group" class="col-12 js-spinbutton" aria-labelledby="label-control">
-						<h2 id="label-control" class="mt-2">
-							Controls <sup class="js-value">1</sup>
-						</h2>
-						<div class="row my-3">
-							<div class="col-6">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<span class="input-group-text">Minimum</span>
-									</div>
-									<input class="form-control js-control-min" type="number" value="1" min="1" step="1">
-								</div>
-							</div>
-							<div class="col-6">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<span class="input-group-text">Maximum</span>
-									</div>
-									<input class="form-control js-control-max" type="number" value="100" min="1" step="1">
-								</div>
-							</div>
-							<div class="col-12 mt-3">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<span class="input-group-text">Now</span>
-									</div>
-									<input class="form-control js-control-now" type="number" value="1" min="1" step="1">
-								</div>
-							</div>
-						</div>
+				<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-dexterity">
+					<h3 id="label-dexterity" class="mt-2">
+						Dexterity <sup class="js-value">12</sup><sup class="js-requirement"></sup>
+					</h3>
 
-						<div id="level" role="spinbutton" aria-valuemin="1" aria-valuemax="100" aria-valuenow="1">
+					<div class="d-flex">
+						<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
+						<div class="w-100" id="dexterity" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
@@ -131,170 +193,109 @@ spinbutton.init();</code></pre>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="border p-3 my-5">
-				<div class="row">
-					<div class="col-12">
-						<h2>Character</h2>
-						<select id="classes" class="custom-select" name="classes"></select>
-					</div>
 
-					<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-strength">
-						<h3 id="label-strength" class="mt-2">
-							Strength <sup class="js-value">12</sup><sup class="js-requirement"></sup>
-						</h3>
+				<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-constitution">
+					<h3 id="label-constitution" class="mt-2">
+						Constitution <sup class="js-value">12</sup><sup class="js-requirement"></sup>
+					</h3>
 
-						<div class="d-flex">
-							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
-							<div class="w-100" id="strength" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
-											-
-										</button>
-									</div>
+					<div class="d-flex">
+						<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
+						<div class="w-100" id="constitution" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
+										-
+									</button>
+								</div>
 
-									<input type="text" class="form-control">
+								<input type="text" class="form-control">
 
-									<div class="input-group-append">
-										<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
-											+
-										</button>
-									</div>
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
+										+
+									</button>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-dexterity">
-						<h3 id="label-dexterity" class="mt-2">
-							Dexterity <sup class="js-value">12</sup><sup class="js-requirement"></sup>
-						</h3>
+				</div>
 
-						<div class="d-flex">
-							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
-							<div class="w-100" id="dexterity" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
-											-
-										</button>
-									</div>
+				<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-intelligence">
+					<h3 id="label-intelligence" class="mt-2">
+						Intelligence <sup class="js-value">12</sup><sup class="js-requirement"></sup>
+					</h3>
 
-									<input type="text" class="form-control">
+					<div class="d-flex">
+						<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
+						<div class="w-100" id="intelligence" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
+										-
+									</button>
+								</div>
 
-									<div class="input-group-append">
-										<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
-											+
-										</button>
-									</div>
+								<input type="text" class="form-control">
+
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
+										+
+									</button>
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-constitution">
-						<h3 id="label-constitution" class="mt-2">
-							Constitution <sup class="js-value">12</sup><sup class="js-requirement"></sup>
-						</h3>
+				<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-wisdom">
+					<h3 id="label-wisdom" class="mt-2">
+						Wisdom <sup class="js-value">12</sup><sup class="js-requirement"></sup>
+					</h3>
 
-						<div class="d-flex">
-							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
-							<div class="w-100" id="constitution" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
-											-
-										</button>
-									</div>
+					<div class="d-flex">
+						<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
+						<div class="w-100" id="wisdom" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
+										-
+									</button>
+								</div>
 
-									<input type="text" class="form-control">
+								<input type="text" class="form-control">
 
-									<div class="input-group-append">
-										<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
-											+
-										</button>
-									</div>
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
+										+
+									</button>
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-intelligence">
-						<h3 id="label-intelligence" class="mt-2">
-							Intelligence <sup class="js-value">12</sup><sup class="js-requirement"></sup>
-						</h3>
+				<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-charisma">
+					<h3 id="label-charisma" class="mt-2">
+						Charisma <sup class="js-value">12</sup><sup class="js-requirement"></sup>
+					</h3>
 
-						<div class="d-flex">
-							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
-							<div class="w-100" id="intelligence" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
-											-
-										</button>
-									</div>
-
-									<input type="text" class="form-control">
-
-									<div class="input-group-append">
-										<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
-											+
-										</button>
-									</div>
+					<div class="d-flex">
+						<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
+						<div class="w-100" id="charisma" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
+										-
+									</button>
 								</div>
-							</div>
-						</div>
-					</div>
 
-					<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-wisdom">
-						<h3 id="label-wisdom" class="mt-2">
-							Wisdom <sup class="js-value">12</sup><sup class="js-requirement"></sup>
-						</h3>
+								<input type="text" class="form-control">
 
-						<div class="d-flex">
-							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
-							<div class="w-100" id="wisdom" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
-											-
-										</button>
-									</div>
-
-									<input type="text" class="form-control">
-
-									<div class="input-group-append">
-										<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
-											+
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div role="group" class="col-12 col-md-4 js-spinbutton" aria-labelledby="label-charisma">
-						<h3 id="label-charisma" class="mt-2">
-							Charisma <sup class="js-value">12</sup><sup class="js-requirement"></sup>
-						</h3>
-
-						<div class="d-flex">
-							<button type="button" class="btn mr-2 btn-primary js-dice">Roll</button>
-							<div class="w-100" id="charisma" role="spinbutton" aria-valuemin="3" aria-valuemax="18" aria-valuenow="12">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<button class="btn btn-outline-secondary js-decrease" tabindex="-1" aria-label="decrease" type="button">
-											-
-										</button>
-									</div>
-
-									<input type="text" class="form-control">
-
-									<div class="input-group-append">
-										<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
-											+
-										</button>
-									</div>
+								<div class="input-group-append">
+									<button class="btn btn-outline-secondary js-increase" tabindex="-1" aria-label="increase" type="button">
+										+
+									</button>
 								</div>
 							</div>
 						</div>
@@ -302,191 +303,194 @@ spinbutton.init();</code></pre>
 				</div>
 			</div>
 		</div>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/prism.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
-		<script src="main.js"></script>
-		<script>
-			const scores = {
-				rogue: {},
-				sorcerer: {},
-				barbarian: {},
-				warlock: {},
-				fighter: {
-					strength: 9,
-				},
-				monk: {},
-				paladin: {
-					strength: 12,
-					constitution: 9,
-					wisdom: 13,
-					charisma: 17,
-				},
-				ranger: {
-					strength: 13,
-					dexterity: 13,
-					constitution: 14,
-					wisdom: 14,
-				},
-				mage: {
-					intelligence: 9,
-				},
-				wizard: {},
-				illusionist: {
-					dexterity: 16,
-				},
-				cleric: {
-					wisdom: 9,
-				},
-				thief: {
-					dexterity: 9,
-				},
-				bard: {
-					dexterity: 12,
-					intelligence: 13,
-					charisma: 15,
-				},
-				druid: {
-					wisdom: 12,
-					charisma: 15,
-				},
-			};
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/prism.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
+	<script src="main.js"></script>
+	<script>
+		const scores = {
+			rogue: {},
+			sorcerer: {},
+			barbarian: {},
+			warlock: {},
+			fighter: {
+				strength: 9,
+			},
+			monk: {},
+			paladin: {
+				strength: 12,
+				constitution: 9,
+				wisdom: 13,
+				charisma: 17,
+			},
+			ranger: {
+				strength: 13,
+				dexterity: 13,
+				constitution: 14,
+				wisdom: 14,
+			},
+			mage: {
+				intelligence: 9,
+			},
+			wizard: {},
+			illusionist: {
+				dexterity: 16,
+			},
+			cleric: {
+				wisdom: 9,
+			},
+			thief: {
+				dexterity: 9,
+			},
+			bard: {
+				dexterity: 12,
+				intelligence: 13,
+				charisma: 15,
+			},
+			druid: {
+				wisdom: 12,
+				charisma: 15,
+			},
+		};
 
-			const url = 'https://www.dnd5eapi.co';
-			const spinbuttons = [];
-			const $classes = document.getElementById('classes');
-			const roll = face => Math.floor(Math.random() * face + 1);
+		const url = 'https://www.dnd5eapi.co';
+		const spinbuttons = [];
+		const $classes = document.getElementById('classes');
+		const roll = face => Math.floor(Math.random() * face + 1);
 
-			const getClasses = async () => {
-				let response = await fetch(`${url}/api/classes`);
-				let data = await response.json();
+		const getClasses = async () => {
+			let response = await fetch(`${url}/api/classes`);
+			let data = await response.json();
 
-				return data;
-			};
+			return data;
+		};
 
-			getClasses().then(data => {
-				data.results.forEach((characterClass, index) => {
-					// Option
-					$classes[index] = new Option(characterClass.name, characterClass.index);
-				});
+		getClasses().then(data => {
+			data.results.forEach((characterClass, index) => {
+				// Option
+				$classes[index] = new Option(characterClass.name, characterClass.index);
+			});
+		});
+
+		const alert = content => {
+			const div = document.createElement('div');
+
+			div.className = 'toast fade show';
+			div.style = 'toast fade show';
+			div.innerHTML = `<div class="toast-body">${content}</div>`;
+
+			div.setAttribute('role', 'alert');
+			div.setAttribute('aria-live', 'assertive');
+			div.setAttribute('aria-atomic', 'true');
+
+			return div;
+		};
+		const $alert = document.querySelector('.js-alert');
+		const onSpinButtonChange = content => {
+			const $el = alert(content);
+
+			$alert.appendChild($el);
+
+			$el.addEventListener(
+				'click',
+				() => $el.style.setProperty('display', 'none'),
+				false,
+			);
+
+			setTimeout(() => $el.parentNode.removeChild($el), 2000);
+		};
+
+		[...document.querySelectorAll('.js-spinbutton')].forEach($el => {
+			const $value = $el.querySelector('.js-value');
+			const $spinbutton = $el.querySelector('[role="spinbutton"]');
+			const $dice = $el.querySelector('.js-dice') || false;
+			const $append = $el.querySelector('.js-append') || false;
+			const stats = 3 * roll(6);
+
+			// Controls
+			const $max = $el.querySelector('.js-control-max') || false;
+			const $min = $el.querySelector('.js-control-min') || false;
+			const $now = $el.querySelector('.js-control-now') || false;
+
+			const spinbutton = new SpinButton.default($spinbutton);
+
+			spinbutton.el.addEventListener('SpinButton.change', ({ detail }) => {
+				const { value } = detail;
+				$value.innerHTML = value;
+
+				onSpinButtonChange(value);
+				console.log(spinbutton.value.text);
+
+				$append && ($append.innerHTML = spinbutton.value.text);
 			});
 
-			const alert = content => {
-				const div = document.createElement('div');
+			spinbutton.init();
+			spinbutton.$requirement = $el.querySelector('.js-requirement') || false;
 
-				div.className = 'toast fade show';
-				div.style = 'toast fade show';
-				div.innerHTML = `<div class="toast-body">${content}</div>`;
+			if ($dice) {
+				spinbuttons.push(spinbutton);
+				spinbutton.setValue(stats);
 
-				div.setAttribute('role', 'alert');
-				div.setAttribute('aria-live', 'assertive');
-				div.setAttribute('aria-atomic', 'true');
+				$dice.addEventListener('click', () => {
+					const stats = 3 * roll(6);
 
-				return div;
-			};
-			const $alert = document.querySelector('.js-alert');
-			const onSpinButtonChange = content => {
-				const $el = alert(content);
-
-				$alert.appendChild($el);
-
-				$el.addEventListener(
-					'click',
-					() => $el.style.setProperty('display', 'none'),
-					false,
-				);
-
-				setTimeout(() => $el.parentNode.removeChild($el), 2000);
-			};
-
-			[...document.querySelectorAll('.js-spinbutton')].forEach($el => {
-				const $value = $el.querySelector('.js-value');
-				const $spinbutton = $el.querySelector('[role="spinbutton"]');
-				const $dice = $el.querySelector('.js-dice') || false;
-				const $append = $el.querySelector('.js-append') || false;
-				const stats = 3 * roll(6);
-
-				// Controls
-				const $max = $el.querySelector('.js-control-max') || false;
-				const $min = $el.querySelector('.js-control-min') || false;
-				const $now = $el.querySelector('.js-control-now') || false;
-
-				const spinbutton = new SpinButton.default($spinbutton);
-
-				spinbutton.on('SpinButton.change', value => {
-					$value.innerHTML = value;
-
-					onSpinButtonChange(value);
-					console.log(spinbutton.value.text);
-
-					$append && ($append.innerHTML = spinbutton.value.text);
-				});
-
-				spinbutton.init();
-				spinbutton.$requirement = $el.querySelector('.js-requirement') || false;
-
-				if ($dice) {
-					spinbuttons.push(spinbutton);
 					spinbutton.setValue(stats);
+				});
+			}
 
-					$dice.addEventListener('click', () => {
-						const stats = 3 * roll(6);
+			if ($max) {
+				$max.addEventListener('input', event => {
+					const { value } = event.target;
 
-						spinbutton.setValue(stats);
-					});
-				}
-
-				if ($max) {
-					$max.addEventListener('input', event => {
-						const { value } = event.target;
-
-						if (value) {
-							$min.setAttribute('max', value);
-							$now.setAttribute('max', value);
-							spinbutton.setMax(value);
-						}
-					});
-				}
-
-				if ($min) {
-					$min.addEventListener('input', event => {
-						const { value } = event.target;
-
-						if (value) {
-							$max.setAttribute('min', value);
-							$now.setAttribute('min', value);
-							spinbutton.setMin(value);
-						}
-					});
-				}
-
-				if ($now) {
-					$now.addEventListener('input', event => {
-						const { value } = event.target;
-
-						if (value) {
-							spinbutton.setValue(value);
-						}
-					});
-				}
-			});
-
-			$classes.addEventListener('change', event => {
-				const { value } = event.target.options[event.target.selectedIndex];
-
-				spinbuttons.forEach(spinbutton => {
-					const { el, $requirement } = spinbutton;
-					const requirements = [];
-
-					spinbutton.setMin(3);
-					$requirement.innerHTML = '';
-
-					if (el.id in scores[value]) {
-						spinbutton.setMin(scores[value][el.id]);
-
-						$requirement.innerHTML = ` (${scores[value][el.id]})`;
+					if (value) {
+						$min.setAttribute('max', value);
+						$now.setAttribute('max', value);
+						spinbutton.setMax(value);
 					}
 				});
+			}
+
+			if ($min) {
+				$min.addEventListener('input', event => {
+					const { value } = event.target;
+
+					if (value) {
+						$max.setAttribute('min', value);
+						$now.setAttribute('min', value);
+						spinbutton.setMin(value);
+					}
+				});
+			}
+
+			if ($now) {
+				$now.addEventListener('input', event => {
+					const { value } = event.target;
+
+					if (value) {
+						spinbutton.setValue(value);
+					}
+				});
+			}
+		});
+
+		$classes.addEventListener('change', event => {
+			const { value } = event.target.options[event.target.selectedIndex];
+
+			spinbuttons.forEach(spinbutton => {
+				const { el, $requirement } = spinbutton;
+				const requirements = [];
+
+				spinbutton.setMin(3);
+				$requirement.innerHTML = '';
+
+				if (el.id in scores[value]) {
+					spinbutton.setMin(scores[value][el.id]);
+
+					$requirement.innerHTML = ` (${scores[value][el.id]})`;
+				}
 			});
-		</script>
-	</body>
+		});
+	</script>
+</body>
+
 </html>

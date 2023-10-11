@@ -1,4 +1,3 @@
-import { EventEmitter } from 'events';
 import clamp from './clamp';
 
 /**
@@ -46,6 +45,24 @@ const setText = (now: number, append: Text) => {
 	return now.toString();
 };
 
+/**
+ * Dispatch event
+ *
+ * @param {HTMLElement} target
+ * @param {object} details
+ * @param {string} name
+ */
+const dispatchEvent = (target: HTMLElement, details: object = {}, name: string = ''): boolean => {
+	const event = new CustomEvent(`SpinButton.${name}`, {
+		bubbles: false,
+		cancelable: true,
+		detail: details,
+	});
+
+	// Dispatch the event on target.
+	return target.dispatchEvent(event);
+};
+
 type Attributes = {
 	[key: string]: string;
 };
@@ -73,7 +90,7 @@ const optionsDefault: Options = {
 	},
 };
 
-export default class SpinButton extends EventEmitter {
+export default class SpinButton {
 	el: HTMLElement;
 	$input: HTMLInputElement | null;
 	$increase: HTMLElement | null;
@@ -83,8 +100,6 @@ export default class SpinButton extends EventEmitter {
 	text: Text;
 
 	constructor(el: HTMLElement, options = {} as Options) {
-		super();
-
 		this.el = el;
 		this.options = { ...optionsDefault, ...options } as Options;
 
@@ -179,7 +194,7 @@ export default class SpinButton extends EventEmitter {
 		this.$input!.value = this.value.now.toString();
 
 		if (emit) {
-			this.emit('SpinButton.change', this.value.now);
+			dispatchEvent(this.el, { value: this.value.now }, 'change');
 		}
 	}
 }
