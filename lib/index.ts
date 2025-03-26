@@ -63,19 +63,39 @@ const dispatchEvent = (target: HTMLElement, details: object = {}, name: string =
 	return target.dispatchEvent(event);
 };
 
+/**
+ * Represents a collection of attributes where the key is a string and the value is also a string.
+ *
+ * @type {Object.<string, string>}
+ */
 type Attributes = {
 	[key: string]: string;
 };
 
+/**
+ * Represents a text object with singular and plural forms.
+ */
 interface Text {
 	single: string;
 	plural: string;
 }
 
+/**
+ * Interface representing the options for the spin button.
+ */
 interface Options {
 	text: Text;
 }
 
+/**
+ * Represents a value with a minimum, maximum, current value, and a textual representation.
+ *
+ * @interface Value
+ * @property {number} min - The minimum value.
+ * @property {number} max - The maximum value.
+ * @property {number} now - The current value.
+ * @property {string} text - The textual representation of the value.
+ */
 interface Value {
 	min: number;
 	max: number;
@@ -124,7 +144,7 @@ export default class SpinButton {
 	}
 
 	init(): void {
-		this.setValue(this.value.now);
+		this.setValue(this.value.now, false);
 		this.initEvents();
 	}
 
