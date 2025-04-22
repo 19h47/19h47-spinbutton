@@ -27,7 +27,7 @@ const toggleDisabled = (target: HTMLElement | null, now: number, value: number) 
  * @param {Attributes} attributes
  */
 const setAttributes = (element: HTMLElement, attributes: Attributes) => {
-	Object.keys(attributes).map(key => element.setAttribute(key, attributes[key]));
+	Object.keys(attributes).forEach(key => element.setAttribute(key, attributes[key]));
 };
 
 /**
@@ -39,7 +39,7 @@ const setAttributes = (element: HTMLElement, attributes: Attributes) => {
  */
 const setText = (now: number, append: Text) => {
 	if (append) {
-		return `${now} ${1 >= now ? append.single : append.plural}`;
+		return `${now} ${now <= 1 ? append.single : append.plural}`;
 	}
 
 	return now.toString();
@@ -52,7 +52,7 @@ const setText = (now: number, append: Text) => {
  * @param {object} details
  * @param {string} name
  */
-const dispatchEvent = (target: HTMLElement, details: object = {}, name: string = ''): boolean => {
+const dispatchEvent = (target: HTMLElement, details: object = {}, name: string): boolean => {
 	const event = new CustomEvent(`SpinButton.${name}`, {
 		bubbles: false,
 		cancelable: true,
@@ -85,6 +85,8 @@ interface Text {
  */
 interface Options {
 	text: Text;
+	step: number;
+	delay: number;
 }
 
 /**
@@ -108,8 +110,9 @@ const optionsDefault: Options = {
 		single: 'item',
 		plural: 'items',
 	},
+	step: 1,
+	delay: 20,
 };
-
 export default class SpinButton {
 	el: HTMLElement;
 	$input: HTMLInputElement | null;
@@ -121,20 +124,30 @@ export default class SpinButton {
 
 	constructor(el: HTMLElement, options = {} as Options) {
 		this.el = el;
+		// Merge default options with user-provided options, giving precedence to user-provided options.
 		this.options = { ...optionsDefault, ...options } as Options;
 
 		this.$input = this.el.querySelector<HTMLInputElement>('input[type="text"]');
 		this.$increase = this.el.querySelector('.js-increase');
 		this.$decrease = this.el.querySelector('.js-decrease');
 
-		const now = JSON.parse(this.el.getAttribute('aria-valuenow') as string);
+		const now = parseInt(this.el.getAttribute('aria-valuenow') || '0', 10);
 
 		this.text =
-			JSON.parse(this.el.getAttribute('data-spinbutton-text') as string) || options.text;
+			(() => {
+				try {
+					return JSON.parse(this.el.getAttribute('data-spinbutton-text') as string) || options.text;
+				} catch {
+					return options.text;
+				}
+			})();
+
+		this.options.step = parseInt(this.el.getAttribute('data-spinbutton-step') || this.options.step.toString(), 10);
+		this.options.delay = parseInt(this.el.getAttribute('data-spinbutton-delay') || this.options.delay.toString(), 10);
 
 		this.value = {
-			min: JSON.parse(this.el.getAttribute('aria-valuemin') as string),
-			max: JSON.parse(this.el.getAttribute('aria-valuemax') as string),
+			min: parseInt(this.el.getAttribute('aria-valuemin') || '0', 10),
+			max: parseInt(this.el.getAttribute('aria-valuemax') || '0', 10),
 			now,
 			text: setText(now, this.text).toString(),
 		};
@@ -150,9 +163,15 @@ export default class SpinButton {
 
 	initEvents(): void {
 		this.el.addEventListener('keydown', this.handleKeydown);
-		this.$increase!.addEventListener('click', () => this.handleClick(this.value.now + 1));
-		this.$decrease!.addEventListener('click', () => this.handleClick(this.value.now - 1));
-		this.$input!.addEventListener('input', this.handleInput);
+		if (this.$increase) {
+			this.$increase.addEventListener('click', () => this.handleClick(this.value.now + this.options.step));
+		}
+		if (this.$decrease) {
+			this.$decrease.addEventListener('click', () => this.handleClick(this.value.now - this.options.step));
+		}
+		if (this.$input) {
+			this.$input.addEventListener('input', this.handleInput);
+		}
 	}
 
 	handleClick = (value: number) => this.setValue(value);
@@ -167,23 +186,25 @@ export default class SpinButton {
 	handleKeydown = (event: KeyboardEvent) => {
 		const key = event.key || event.code;
 
-		const setValue = (value: number) => {
-			event.preventDefault();
-			this.setValue(value);
-		};
+		// const setValue = (value: number) => {
+		// 	event.preventDefault();
+		// 	this.setValue(value);
+		// };
 
-		const codes: any = {
-			ArrowDown: () => setValue(this.value.now - 1),
-			ArrowUp: () => setValue(this.value.now + 1),
-			PageDown: () => setValue(this.value.now - 5),
-			PageUp: () => setValue(this.value.now + 5),
-			Home: () => setValue(this.value.min),
-			End: () => setValue(this.value.max),
+		const codes: { [key: string]: () => void } = {
+			ArrowUp: () => this.setValue(this.value.now + this.options.step),
+			ArrowRight: () => this.setValue(this.value.now + this.options.step),
+			ArrowDown: () => this.setValue(this.value.now - this.options.step),
+			ArrowLeft: () => this.setValue(this.value.now - this.options.step),
+			PageDown: () => this.setValue(this.value.now - this.options.step * 5),
+			PageUp: () => this.setValue(this.value.now + this.options.step * 5),
+			Home: () => this.setValue(this.value.min),
+			End: () => this.setValue(this.value.max),
 			default: () => false,
 		};
 
 		return (codes[key] || codes.default)();
-	};
+	}
 
 	setMin(value: number, emit: boolean = true): void {
 		this.value.min = parseInt(value.toString(), 10);
@@ -200,11 +221,26 @@ export default class SpinButton {
 	setValue(value: number, emit: boolean = true): void {
 		const current = parseInt(value.toString(), 10);
 
-		this.value.now = clamp(current, this.value.min, this.value.max);
+		if (this.value.min && this.value.max) {
+			this.value.now = clamp(current, this.value.min, this.value.max);
+		} else if (this.value.max) {
+			this.value.now = clamp(current, this.value.min, this.value.max);
+		} else if (this.value.min) {
+			this.value.now = clamp(current, Number.MIN_SAFE_INTEGER, this.value.max);
+		} else {
+			// No min or max
+			this.value.now = clamp(current, Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
+		}
+
 		this.value.text = setText(this.value.now, this.text);
 
-		toggleDisabled(this.$increase, this.value.now, this.value.max);
-		toggleDisabled(this.$decrease, this.value.now, this.value.min);
+		if (this.value.max) {
+			toggleDisabled(this.$increase, this.value.now, this.value.max);
+		}
+
+		if (this.value.min) {
+			toggleDisabled(this.$decrease, this.value.now, this.value.min);
+		}
 
 		setAttributes(this.el, {
 			'aria-valuenow': this.value.now.toString(),
@@ -214,7 +250,27 @@ export default class SpinButton {
 		this.$input!.value = this.value.now.toString();
 
 		if (emit) {
-			dispatchEvent(this.el, { value: this.value.now }, 'change');
+			if (!this.debounceDispatchEvent) {
+				this.debounceDispatchEvent = this.debounce(() => {
+					dispatchEvent(this.el, { value: this.value.now }, 'change');
+				}, this.options.delay); // Adjust debounce delay as needed
+			}
+			this.debounceDispatchEvent();
 		}
+	}
+
+	private debounceDispatchEvent: (() => void) | null = null;
+
+	private debounce(func: () => void, wait: number): () => void {
+		let timeout: number | null = null;
+		return () => {
+			if (timeout !== null) {
+				clearTimeout(timeout);
+			}
+			timeout = window.setTimeout(() => {
+				func();
+				timeout = null;
+			}, wait);
+		};
 	}
 }
