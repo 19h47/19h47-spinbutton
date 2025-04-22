@@ -99,8 +99,8 @@ interface Options {
  * @property {string} text - The textual representation of the value.
  */
 interface Value {
-	min: number;
-	max: number;
+	min: number | false;
+	max: number | false;
 	now: number;
 	text: string;
 }
@@ -146,8 +146,8 @@ export default class SpinButton {
 		this.options.delay = parseInt(this.el.getAttribute('data-spinbutton-delay') || this.options.delay.toString(), 10);
 
 		this.value = {
-			min: parseInt(this.el.getAttribute('aria-valuemin') || '0', 10),
-			max: parseInt(this.el.getAttribute('aria-valuemax') || '0', 10),
+			min: this.el.getAttribute('aria-valuemin') !== null ? parseInt(this.el.getAttribute('aria-valuemin') as string, 10) : false,
+			max: this.el.getAttribute('aria-valuemax') !== null ? parseInt(this.el.getAttribute('aria-valuemax') || '0', 10) : false,
 			now,
 			text: setText(now, this.text).toString(),
 		};
@@ -198,11 +198,27 @@ export default class SpinButton {
 			ArrowLeft: () => this.setValue(this.value.now - this.options.step),
 			PageDown: () => this.setValue(this.value.now - this.options.step * 5),
 			PageUp: () => this.setValue(this.value.now + this.options.step * 5),
-			Home: () => this.setValue(this.value.min),
-			End: () => this.setValue(this.value.max),
+			Home: () => {
+				if (typeof this.value.min === 'number') {
+					this.setValue(this.value.min);
+				}
+			},
+			End: () => {
+				if (typeof this.value.max === 'number') {
+					this.setValue(this.value.max);
+				}
+			},
 			default: () => false,
 		};
 
+		if (codes[key]) {
+			event.preventDefault();
+		}
+
+		// Call the function associated with the key
+		// or the default function if the key is not found in the codes object.
+		// This will ensure that the function is called even if the key is not found.
+		// This is a more concise way to handle the function call.
 		return (codes[key] || codes.default)();
 	}
 
@@ -222,13 +238,20 @@ export default class SpinButton {
 		const current = parseInt(value.toString(), 10);
 
 		if (this.value.min && this.value.max) {
+			// Min and max
+			// console.log('Min AND max');
 			this.value.now = clamp(current, this.value.min, this.value.max);
-		} else if (this.value.max) {
-			this.value.now = clamp(current, this.value.min, this.value.max);
-		} else if (this.value.min) {
+		} else if (this.value.max === false && this.value.min !== false) {
+			// No max
+			// console.log('No max');
+			this.value.now = clamp(current, this.value.min, Number.MAX_SAFE_INTEGER);
+		} else if (this.value.min === false && this.value.max !== false) {
+			// No min
+			// console.log('No min');
 			this.value.now = clamp(current, Number.MIN_SAFE_INTEGER, this.value.max);
 		} else {
 			// No min or max
+			// console.log('No min AND no max');
 			this.value.now = clamp(current, Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
 		}
 

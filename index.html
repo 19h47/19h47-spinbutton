@@ -106,13 +106,79 @@ spinbutton.init();</code></pre>
 			</div>
 			<div class="border p-3 my-5">
 				<div class="row">
-					<div role="group" class="col-12 js-spinbutton" aria-labelledby="label-level">
+					<div role="group" class="col-12 js-spinbutton mb-3" aria-labelledby="label-level">
 						<h2 id="label-level" class="mt-2">Level <sup class="js-value">1</sup></h2>
 						<p class="m3">You can ommit the maximum and minimum values.</p>
 						<div
 							id="level"
 							role="spinbutton"
 							aria-valuenow="1"
+							aria-valuetext="level 1">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<button
+										class="btn btn-outline-secondary js-decrease"
+										tabindex="-1"
+										aria-label="decrease"
+										type="button">
+										-
+									</button>
+								</div>
+
+								<input type="text" class="form-control" />
+
+								<div class="input-group-append">
+									<button
+										class="btn btn-outline-secondary js-increase"
+										tabindex="-1"
+										aria-label="increase"
+										type="button">
+										+
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div role="group" class="col-12 js-spinbutton my-3" aria-labelledby="label-level">
+						<p class="m3">Or just set the minimum value.</p>
+						<div
+							id="level"
+							role="spinbutton"
+							aria-valuenow="0"
+							aria-valuemin="0"
+							aria-valuetext="level 0">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<button
+										class="btn btn-outline-secondary js-decrease"
+										tabindex="-1"
+										aria-label="decrease"
+										type="button">
+										-
+									</button>
+								</div>
+
+								<input type="text" class="form-control" />
+
+								<div class="input-group-append">
+									<button
+										class="btn btn-outline-secondary js-increase"
+										tabindex="-1"
+										aria-label="increase"
+										type="button">
+										+
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div role="group" class="col-12 js-spinbutton mt-3" aria-labelledby="label-level">
+						<p class="m3">Or just set the minimum value.</p>
+						<div
+							id="level"
+							role="spinbutton"
+							aria-valuenow="100"
+							aria-valuemax="100"
 							aria-valuetext="level 1">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -654,7 +720,9 @@ spinbutton.init();</code></pre>
 
 				spinbutton.el.addEventListener('SpinButton.change', ({ detail }) => {
 					const { value } = detail;
-					$value.innerHTML = value;
+					if ( $value ) {
+						$value.innerHTML = value;
+					}
 
 					onSpinButtonChange(value);
 					console.log(spinbutton.value.text);
