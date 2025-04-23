@@ -270,7 +270,10 @@ export default class SpinButton {
 			'aria-valuetext': this.value.text,
 		});
 
-		this.$input?.setAttribute('value', this.value.now.toString());
+		if (this.$input) {
+			this.$input.setAttribute('value', this.value.now.toString());
+			this.$input.value = this.value.now.toString();
+		}
 
 		if (emit) {
 			if (!this.debounceDispatchEvent) {
