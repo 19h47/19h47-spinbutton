@@ -1,4 +1,5 @@
-import clamp from './clamp';
+import { clamp, throttle } from './utils';
+import { Options, Value, Text } from './type';
 
 /**
  * Toggle Disabled
@@ -20,15 +21,6 @@ const toggleDisabled = (target: HTMLElement | null, now: number, value: number) 
 	return target.removeAttribute('disabled');
 };
 
-/**
- * Set Attributes
- *
- * @param {HTMLElement} element
- * @param {Attributes} attributes
- */
-const setAttributes = (element: HTMLElement, attributes: Attributes) => {
-	Object.keys(attributes).forEach(key => element.setAttribute(key, attributes[key]));
-};
 
 /**
  * Set Text
@@ -53,7 +45,7 @@ const setText = (now: number, append: Text) => {
  * @param {string} name
  */
 const dispatchEvent = (target: HTMLElement, details: object = {}, name: string): boolean => {
-	const event = new CustomEvent(`SpinButton.${name}`, {
+	const event = new CustomEvent(`Spinbutton.${name}`, {
 		bubbles: false,
 		cancelable: true,
 		detail: details,
@@ -63,48 +55,6 @@ const dispatchEvent = (target: HTMLElement, details: object = {}, name: string):
 	return target.dispatchEvent(event);
 };
 
-/**
- * Represents a collection of attributes where the key is a string and the value is also a string.
- *
- * @type {Object.<string, string>}
- */
-type Attributes = {
-	[key: string]: string;
-};
-
-/**
- * Represents a text object with singular and plural forms.
- */
-interface Text {
-	single: string;
-	plural: string;
-}
-
-/**
- * Interface representing the options for the spin button.
- */
-interface Options {
-	text: Text;
-	step: number;
-	delay: number;
-}
-
-/**
- * Represents a value with a minimum, maximum, current value, and a textual representation.
- *
- * @interface Value
- * @property {number} min - The minimum value.
- * @property {number} max - The maximum value.
- * @property {number} now - The current value.
- * @property {string} text - The textual representation of the value.
- */
-interface Value {
-	min: number | false;
-	max: number | false;
-	now: number;
-	text: string;
-}
-
 const optionsDefault: Options = {
 	text: {
 		single: 'item',
@@ -113,14 +63,42 @@ const optionsDefault: Options = {
 	step: 1,
 	delay: 20,
 };
-export default class SpinButton {
+
+/**
+ * Dynamically adds the `.sr-only` class to the document's styles.
+ */
+const addSrOnlyStyles = () => {
+	const style = document.createElement('style');
+	style.textContent = `
+		.sr-only {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border: 0;
+		}
+	`;
+	document.head.appendChild(style);
+};
+
+// Call the function to ensure the `.sr-only` class is available
+addSrOnlyStyles();
+
+export default class Spinbutton {
 	el: HTMLElement;
 	$input: HTMLInputElement | null;
-	$increase: HTMLElement | null;
-	$decrease: HTMLElement | null;
+	$increase: HTMLButtonElement | null;
+	$decrease: HTMLButtonElement | null;
+	$liveRegion: HTMLElement | null; // Add a live region for screen reader announcements
 	options: Options;
 	value: Value;
 	text: Text;
+
+	private throttle: (() => void) | null = null;
 
 	constructor(el: HTMLElement, options = {} as Options) {
 		this.el = el;
@@ -130,6 +108,13 @@ export default class SpinButton {
 		this.$input = this.el.querySelector<HTMLInputElement>('input[type="text"]');
 		this.$increase = this.el.querySelector('.js-increase');
 		this.$decrease = this.el.querySelector('.js-decrease');
+
+		// Create and append the live region
+		this.$liveRegion = document.createElement('div');
+		this.$liveRegion.setAttribute('aria-live', 'polite');
+		this.$liveRegion.setAttribute('aria-atomic', 'true');
+		this.$liveRegion.classList.add('sr-only'); // Apply the dynamically added class
+		this.el.appendChild(this.$liveRegion);
 
 		const now = parseInt(this.el.getAttribute('aria-valuenow') || '0', 10);
 
@@ -178,18 +163,14 @@ export default class SpinButton {
 
 	handleInput = (event: Event) => {
 		const { target } = event;
-		const value = parseInt((target as HTMLInputElement).value, 10) || 0;
+		const inputValue = (target as HTMLInputElement).value;
+		const value = !isNaN(Number(inputValue)) ? parseInt(inputValue, 10) : 0;
 
 		this.setValue(value);
 	};
 
 	handleKeydown = (event: KeyboardEvent) => {
 		const key = event.key || event.code;
-
-		// const setValue = (value: number) => {
-		// 	event.preventDefault();
-		// 	this.setValue(value);
-		// };
 
 		const codes: { [key: string]: () => void } = {
 			ArrowUp: () => this.setValue(this.value.now + this.options.step),
@@ -198,28 +179,15 @@ export default class SpinButton {
 			ArrowLeft: () => this.setValue(this.value.now - this.options.step),
 			PageDown: () => this.setValue(this.value.now - this.options.step * 5),
 			PageUp: () => this.setValue(this.value.now + this.options.step * 5),
-			Home: () => {
-				if (typeof this.value.min === 'number') {
-					this.setValue(this.value.min);
-				}
-			},
-			End: () => {
-				if (typeof this.value.max === 'number') {
-					this.setValue(this.value.max);
-				}
-			},
+			Home: () => this.value.min && this.setValue(this.value.min),
+			End: () =>this.value.max && this.setValue(this.value.max),
 			default: () => false,
 		};
 
 		if (codes[key]) {
 			event.preventDefault();
+			codes[key]();
 		}
-
-		// Call the function associated with the key
-		// or the default function if the key is not found in the codes object.
-		// This will ensure that the function is called even if the key is not found.
-		// This is a more concise way to handle the function call.
-		return (codes[key] || codes.default)();
 	}
 
 	setMin(value: number, emit: boolean = true): void {
@@ -237,24 +205,10 @@ export default class SpinButton {
 	setValue(value: number, emit: boolean = true): void {
 		const current = parseInt(value.toString(), 10);
 
-		if (this.value.min && this.value.max) {
-			// Min and max
-			// console.log('Min AND max');
-			this.value.now = clamp(current, this.value.min, this.value.max);
-		} else if (this.value.max === false && this.value.min !== false) {
-			// No max
-			// console.log('No max');
-			this.value.now = clamp(current, this.value.min, Number.MAX_SAFE_INTEGER);
-		} else if (this.value.min === false && this.value.max !== false) {
-			// No min
-			// console.log('No min');
-			this.value.now = clamp(current, Number.MIN_SAFE_INTEGER, this.value.max);
-		} else {
-			// No min or max
-			// console.log('No min AND no max');
-			this.value.now = clamp(current, Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
-		}
+		const min = this.value.min !== false ? this.value.min : Number.MIN_SAFE_INTEGER;
+		const max = this.value.max !== false ? this.value.max : Number.MAX_SAFE_INTEGER;
 
+		this.value.now = clamp(current, min, max);
 		this.value.text = setText(this.value.now, this.text);
 
 		if (this.value.max) {
@@ -265,38 +219,29 @@ export default class SpinButton {
 			toggleDisabled(this.$decrease, this.value.now, this.value.min);
 		}
 
-		setAttributes(this.el, {
-			'aria-valuenow': this.value.now.toString(),
-			'aria-valuetext': this.value.text,
-		});
+		this.el.setAttribute('aria-valuenow', this.value.now.toString()) ;
+		this.el.setAttribute('aria-valuetext', this.value.text) ;
 
 		if (this.$input) {
 			this.$input.setAttribute('value', this.value.now.toString());
 			this.$input.value = this.value.now.toString();
 		}
 
+		// Update the live region for screen readers
+		if (this.$liveRegion) {
+			this.$liveRegion.textContent = this.value.text;
+		}
+
 		if (emit) {
-			if (!this.debounceDispatchEvent) {
-				this.debounceDispatchEvent = this.debounce(() => {
-					dispatchEvent(this.el, { value: this.value.now }, 'change');
-				}, this.options.delay); // Adjust debounce delay as needed
+			if (!this.throttle) {
+				this.throttle = throttle(() => {
+					const eventDetail = { value: this.value.now };
+					dispatchEvent(this.el, eventDetail, 'change');
+				}, this.options.delay); // Adjust throttle delay as needed
 			}
-			this.debounceDispatchEvent();
+			this.throttle();
 		}
 	}
-
-	private debounceDispatchEvent: (() => void) | null = null;
-
-	private debounce(func: () => void, wait: number): () => void {
-		let timeout: number | null = null;
-		return () => {
-			if (timeout !== null) {
-				clearTimeout(timeout);
-			}
-			timeout = window.setTimeout(() => {
-				func();
-				timeout = null;
-			}, wait);
-		};
-	}
 }
+
+

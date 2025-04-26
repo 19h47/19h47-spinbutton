@@ -46,10 +46,10 @@
 	&lt;button class=&quot;js-increase&quot; tabindex=&quot;-1&quot; aria-label=&quot;increase&quot; type=&quot;button&quot;&gt;+&lt;/button&gt;
 &lt;/div&gt;</code></pre>
 					<pre
-						class="p-3 mb-0 mt-3"><code class="language-javascript">import SpinButton from '@19h47/spinbutton';
+						class="p-3 mb-0 mt-3"><code class="language-javascript">import Spinbutton from '@19h47/spinbutton';
 
 const $element = document.querySelector('[role="spinbutton"]');
-const spinbutton = new SpinButton($element);
+const spinbutton = new Spinbutton($element);
 
 spinbutton.init();</code></pre>
 				</div>
@@ -173,7 +173,7 @@ spinbutton.init();</code></pre>
 						</div>
 					</div>
 					<div role="group" class="col-12 js-spinbutton mt-3" aria-labelledby="label-level">
-						<p class="m3">Or just set the minimum value.</p>
+						<p class="m3">Or just set the maximum value.</p>
 						<div
 							id="level"
 							role="spinbutton"
@@ -609,8 +609,8 @@ spinbutton.init();</code></pre>
 		</div>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/prism.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.22.0/plugins/autoloader/prism-autoloader.min.js"></script>
-		<script src="main.js"></script>
-		<script>
+		<script type="module">
+			import Spinbutton from './dist/spinbutton.js';
 			const scores = {
 				rogue: {},
 				sorcerer: {},
@@ -689,7 +689,7 @@ spinbutton.init();</code></pre>
 				return div;
 			};
 			const $alert = document.querySelector('.js-alert');
-			const onSpinButtonChange = content => {
+			const onSpinbuttonChange = content => {
 				const $el = alert(content);
 
 				$alert.appendChild($el);
@@ -716,15 +716,15 @@ spinbutton.init();</code></pre>
 				const $min = $el.querySelector('.js-control-min') || false;
 				const $now = $el.querySelector('.js-control-now') || false;
 
-				const spinbutton = new SpinButton.default($spinbutton, { step });
+				const spinbutton = new Spinbutton($spinbutton, { step });
 
-				spinbutton.el.addEventListener('SpinButton.change', ({ detail }) => {
+				spinbutton.el.addEventListener('Spinbutton.change', ({ detail }) => {
 					const { value } = detail;
 					if ( $value ) {
 						$value.innerHTML = value;
 					}
 
-					onSpinButtonChange(value);
+					onSpinbuttonChange(value);
 					console.log(spinbutton.value.text);
 
 					$append && ($append.innerHTML = spinbutton.value.text);
