@@ -9,7 +9,11 @@ import { Options, Value, Text } from './type';
  * @param {number} value
  * @returns
  */
-const toggleDisabled = (target: HTMLElement | null, now: number, value: number) => {
+const toggleDisabled = (
+	target: HTMLElement | null,
+	now: number,
+	value: number
+) => {
 	if (null === target) {
 		return;
 	}
@@ -20,7 +24,6 @@ const toggleDisabled = (target: HTMLElement | null, now: number, value: number) 
 
 	return target.removeAttribute('disabled');
 };
-
 
 /**
  * Set Text
@@ -44,7 +47,11 @@ const setText = (now: number, append: Text) => {
  * @param {object} details
  * @param {string} name
  */
-const dispatchEvent = (target: HTMLElement, details: object = {}, name: string): boolean => {
+const dispatchEvent = (
+	target: HTMLElement,
+	details: object = {},
+	name: string
+): boolean => {
 	const event = new CustomEvent(`Spinbutton.${name}`, {
 		bubbles: false,
 		cancelable: true,
@@ -118,21 +125,37 @@ export default class Spinbutton {
 
 		const now = parseInt(this.el.getAttribute('aria-valuenow') || '0', 10);
 
-		this.text =
-			(() => {
-				try {
-					return JSON.parse(this.el.getAttribute('data-spinbutton-text') as string) || options.text;
-				} catch {
-					return options.text;
-				}
-			})();
+		this.text = (() => {
+			try {
+				return (
+					JSON.parse(this.el.getAttribute('data-spinbutton-text') as string) ||
+					options.text
+				);
+			} catch {
+				return options.text;
+			}
+		})();
 
-		this.options.step = parseInt(this.el.getAttribute('data-spinbutton-step') || this.options.step.toString(), 10);
-		this.options.delay = parseInt(this.el.getAttribute('data-spinbutton-delay') || this.options.delay.toString(), 10);
+		this.options.step = parseInt(
+			this.el.getAttribute('data-spinbutton-step') ||
+				this.options.step.toString(),
+			10
+		);
+		this.options.delay = parseInt(
+			this.el.getAttribute('data-spinbutton-delay') ||
+				this.options.delay.toString(),
+			10
+		);
 
 		this.value = {
-			min: this.el.getAttribute('aria-valuemin') !== null ? parseInt(this.el.getAttribute('aria-valuemin') as string, 10) : false,
-			max: this.el.getAttribute('aria-valuemax') !== null ? parseInt(this.el.getAttribute('aria-valuemax') || '0', 10) : false,
+			min:
+				this.el.getAttribute('aria-valuemin') !== null
+					? parseInt(this.el.getAttribute('aria-valuemin') as string, 10)
+					: false,
+			max:
+				this.el.getAttribute('aria-valuemax') !== null
+					? parseInt(this.el.getAttribute('aria-valuemax') || '0', 10)
+					: false,
 			now,
 			text: setText(now, this.text).toString(),
 		};
@@ -148,25 +171,33 @@ export default class Spinbutton {
 
 	initEvents(): void {
 		this.el.addEventListener('keydown', this.handleKeydown);
+
 		if (this.$increase) {
-			this.$increase.addEventListener('click', () => this.handleClick(this.value.now + this.options.step));
+			this.$increase.addEventListener('click', this.increase);
 		}
 		if (this.$decrease) {
-			this.$decrease.addEventListener('click', () => this.handleClick(this.value.now - this.options.step));
+			this.$decrease.addEventListener('click', this.decrease);
 		}
 		if (this.$input) {
 			this.$input.addEventListener('input', this.handleInput);
 		}
 	}
 
+	decrease = () => {
+		this.setValue(this.value.now - this.options.step);
+	};
+
+	increase = () => {
+		this.setValue(this.value.now + this.options.step);
+	};
+
 	handleClick = (value: number) => this.setValue(value);
 
 	handleInput = (event: Event) => {
 		const { target } = event;
-		const inputValue = (target as HTMLInputElement).value;
-		const value = !isNaN(Number(inputValue)) ? parseInt(inputValue, 10) : 0;
+		const value = (target as HTMLInputElement).value;
 
-		this.setValue(value);
+		this.setValue(isNaN(Number(value)) ? parseInt(value, 10) : this.value.now);
 	};
 
 	handleKeydown = (event: KeyboardEvent) => {
@@ -180,7 +211,9 @@ export default class Spinbutton {
 			PageDown: () => this.setValue(this.value.now - this.options.step * 5),
 			PageUp: () => this.setValue(this.value.now + this.options.step * 5),
 			Home: () => this.value.min && this.setValue(this.value.min),
-			End: () =>this.value.max && this.setValue(this.value.max),
+			End: () => this.value.max && this.setValue(this.value.max),
+			Backspace: () => this.setValue(this.value.now),
+			Delete: () => this.setValue(this.value.now),
 			default: () => false,
 		};
 
@@ -188,7 +221,7 @@ export default class Spinbutton {
 			event.preventDefault();
 			codes[key]();
 		}
-	}
+	};
 
 	setMin(value: number, emit: boolean = true): void {
 		this.value.min = parseInt(value.toString(), 10);
@@ -203,10 +236,17 @@ export default class Spinbutton {
 	}
 
 	setValue(value: number, emit: boolean = true): void {
-		const current = parseInt(value.toString(), 10);
+		// Reset if the value is not a number
+		const current = isNaN(value) ? this.value.now : parseInt(value.toString(), 10);
 
 		const min = this.value.min !== false ? this.value.min : Number.MIN_SAFE_INTEGER;
 		const max = this.value.max !== false ? this.value.max : Number.MAX_SAFE_INTEGER;
+
+		if (current < min || current > max) {
+			this.el.setAttribute('aria-invalid', 'true');
+		} else {
+			this.el.removeAttribute('aria-invalid');
+		}
 
 		this.value.now = clamp(current, min, max);
 		this.value.text = setText(this.value.now, this.text);
@@ -219,8 +259,8 @@ export default class Spinbutton {
 			toggleDisabled(this.$decrease, this.value.now, this.value.min);
 		}
 
-		this.el.setAttribute('aria-valuenow', this.value.now.toString()) ;
-		this.el.setAttribute('aria-valuetext', this.value.text) ;
+		this.el.setAttribute('aria-valuenow', this.value.now.toString());
+		this.el.setAttribute('aria-valuetext', this.value.text);
 
 		if (this.$input) {
 			this.$input.setAttribute('value', this.value.now.toString());
@@ -242,6 +282,22 @@ export default class Spinbutton {
 			this.throttle();
 		}
 	}
+
+	destroy(): void {
+		this.el.removeEventListener('keydown', this.handleKeydown);
+
+		if (this.$increase) {
+			this.$increase.removeEventListener('click', this.increase);
+		}
+		if (this.$decrease) {
+			this.$decrease.removeEventListener('click', this.decrease);
+		}
+		if (this.$input) {
+			this.$input.removeEventListener('input', this.handleInput);
+		}
+
+		if (this.$liveRegion) {
+			this.el.removeChild(this.$liveRegion);
+		}
+	}
 }
-
-

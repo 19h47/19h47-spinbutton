@@ -1,4 +1,4 @@
-const r = (i, t, e) => Math.min(Math.max(i, t), e), p = (i, t) => {
+const o = (i, t, e) => Math.min(Math.max(i, t), e), u = (i, t) => {
   let e = 0, n = null;
   return (...s) => {
     const a = Date.now();
@@ -9,7 +9,7 @@ const r = (i, t, e) => Math.min(Math.max(i, t), e), p = (i, t) => {
 }, h = (i, t, e) => {
   if (i !== null)
     return t === e ? i.setAttribute("disabled", "true") : i.removeAttribute("disabled");
-}, u = (i, t) => t ? `${i} ${i <= 1 ? t.single : t.plural}` : i.toString(), v = (i, t = {}, e) => {
+}, r = (i, t) => t ? `${i} ${i <= 1 ? t.single : t.plural}` : i.toString(), v = (i, t = {}, e) => {
   const n = new CustomEvent(`Spinbutton.${e}`, {
     bubbles: !1,
     cancelable: !0,
@@ -40,11 +40,15 @@ const r = (i, t, e) => Math.min(Math.max(i, t), e), p = (i, t) => {
 	`, document.head.appendChild(i);
 };
 d();
-class m {
+class p {
   constructor(t, e = {}) {
-    this.throttle = null, this.handleClick = (s) => this.setValue(s), this.handleInput = (s) => {
-      const { target: a } = s, l = a.value, o = isNaN(Number(l)) ? 0 : parseInt(l, 10);
-      this.setValue(o);
+    this.throttle = null, this.decrease = () => {
+      this.setValue(this.value.now - this.options.step);
+    }, this.increase = () => {
+      this.setValue(this.value.now + this.options.step);
+    }, this.handleClick = (s) => this.setValue(s), this.handleInput = (s) => {
+      const { target: a } = s, l = a.value;
+      this.setValue(isNaN(Number(l)) ? parseInt(l, 10) : this.value.now);
     }, this.handleKeydown = (s) => {
       const a = s.key || s.code, l = {
         ArrowUp: () => this.setValue(this.value.now + this.options.step),
@@ -55,6 +59,8 @@ class m {
         PageUp: () => this.setValue(this.value.now + this.options.step * 5),
         Home: () => this.value.min && this.setValue(this.value.min),
         End: () => this.value.max && this.setValue(this.value.max),
+        Backspace: () => this.setValue(this.value.now),
+        Delete: () => this.setValue(this.value.now),
         default: () => !1
       };
       l[a] && (s.preventDefault(), l[a]());
@@ -66,18 +72,24 @@ class m {
       } catch {
         return e.text;
       }
-    })(), this.options.step = parseInt(this.el.getAttribute("data-spinbutton-step") || this.options.step.toString(), 10), this.options.delay = parseInt(this.el.getAttribute("data-spinbutton-delay") || this.options.delay.toString(), 10), this.value = {
+    })(), this.options.step = parseInt(
+      this.el.getAttribute("data-spinbutton-step") || this.options.step.toString(),
+      10
+    ), this.options.delay = parseInt(
+      this.el.getAttribute("data-spinbutton-delay") || this.options.delay.toString(),
+      10
+    ), this.value = {
       min: this.el.getAttribute("aria-valuemin") !== null ? parseInt(this.el.getAttribute("aria-valuemin"), 10) : !1,
       max: this.el.getAttribute("aria-valuemax") !== null ? parseInt(this.el.getAttribute("aria-valuemax") || "0", 10) : !1,
       now: n,
-      text: u(n, this.text).toString()
+      text: r(n, this.text).toString()
     }, this.handleClick = this.handleClick.bind(this);
   }
   init() {
     this.setValue(this.value.now, !1), this.initEvents();
   }
   initEvents() {
-    this.el.addEventListener("keydown", this.handleKeydown), this.$increase && this.$increase.addEventListener("click", () => this.handleClick(this.value.now + this.options.step)), this.$decrease && this.$decrease.addEventListener("click", () => this.handleClick(this.value.now - this.options.step)), this.$input && this.$input.addEventListener("input", this.handleInput);
+    this.el.addEventListener("keydown", this.handleKeydown), this.$increase && this.$increase.addEventListener("click", this.increase), this.$decrease && this.$decrease.addEventListener("click", this.decrease), this.$input && this.$input.addEventListener("input", this.handleInput);
   }
   setMin(t, e = !0) {
     this.value.min = parseInt(t.toString(), 10), this.el.setAttribute("aria-valuemin", t.toString()), this.setValue(this.value.now, e);
@@ -86,13 +98,16 @@ class m {
     this.value.max = parseInt(t.toString(), 10), this.el.setAttribute("aria-valuemax", t.toString()), this.setValue(this.value.now, e);
   }
   setValue(t, e = !0) {
-    const n = parseInt(t.toString(), 10), s = this.value.min !== !1 ? this.value.min : Number.MIN_SAFE_INTEGER, a = this.value.max !== !1 ? this.value.max : Number.MAX_SAFE_INTEGER;
-    this.value.now = r(n, s, a), this.value.text = u(this.value.now, this.text), this.value.max && h(this.$increase, this.value.now, this.value.max), this.value.min && h(this.$decrease, this.value.now, this.value.min), this.el.setAttribute("aria-valuenow", this.value.now.toString()), this.el.setAttribute("aria-valuetext", this.value.text), this.$input && (this.$input.setAttribute("value", this.value.now.toString()), this.$input.value = this.value.now.toString()), this.$liveRegion && (this.$liveRegion.textContent = this.value.text), e && (this.throttle || (this.throttle = p(() => {
+    const n = isNaN(t) ? this.value.now : parseInt(t.toString(), 10), s = this.value.min !== !1 ? this.value.min : Number.MIN_SAFE_INTEGER, a = this.value.max !== !1 ? this.value.max : Number.MAX_SAFE_INTEGER;
+    n < s || n > a ? this.el.setAttribute("aria-invalid", "true") : this.el.removeAttribute("aria-invalid"), this.value.now = o(n, s, a), this.value.text = r(this.value.now, this.text), this.value.max && h(this.$increase, this.value.now, this.value.max), this.value.min && h(this.$decrease, this.value.now, this.value.min), this.el.setAttribute("aria-valuenow", this.value.now.toString()), this.el.setAttribute("aria-valuetext", this.value.text), this.$input && (this.$input.setAttribute("value", this.value.now.toString()), this.$input.value = this.value.now.toString()), this.$liveRegion && (this.$liveRegion.textContent = this.value.text), e && (this.throttle || (this.throttle = u(() => {
       const l = { value: this.value.now };
       v(this.el, l, "change");
     }, this.options.delay)), this.throttle());
   }
+  destroy() {
+    this.el.removeEventListener("keydown", this.handleKeydown), this.$increase && this.$increase.removeEventListener("click", this.increase), this.$decrease && this.$decrease.removeEventListener("click", this.decrease), this.$input && this.$input.removeEventListener("input", this.handleInput), this.$liveRegion && this.el.removeChild(this.$liveRegion);
+  }
 }
 export {
-  m as default
+  p as default
 };

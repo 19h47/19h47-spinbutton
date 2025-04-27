@@ -11,9 +11,9 @@ export interface Text {
  * Interface representing the options for the spin button.
  */
 export interface Options {
-	text: Text;
-	step: number;
-	delay: number;
+	text?: Text;
+	step?: number;
+	delay?: number;
 }
 
 /**
