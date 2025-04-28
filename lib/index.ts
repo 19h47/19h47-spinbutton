@@ -159,9 +159,6 @@ export default class Spinbutton {
 			now,
 			text: setText(now, this.text).toString(),
 		};
-
-		// Bind.
-		this.handleClick = this.handleClick.bind(this);
 	}
 
 	init(): void {
@@ -183,16 +180,6 @@ export default class Spinbutton {
 		}
 	}
 
-	decrease = () => {
-		this.setValue(this.value.now - this.options.step);
-	};
-
-	increase = () => {
-		this.setValue(this.value.now + this.options.step);
-	};
-
-	handleClick = (value: number) => this.setValue(value);
-
 	handleInput = (event: Event) => {
 		const { target } = event;
 		const value = (target as HTMLInputElement).value;
@@ -212,8 +199,8 @@ export default class Spinbutton {
 			PageUp: () => this.setValue(this.value.now + this.options.step * 5),
 			Home: () => this.value.min && this.setValue(this.value.min),
 			End: () => this.value.max && this.setValue(this.value.max),
-			Backspace: () => this.setValue(this.value.now),
-			Delete: () => this.setValue(this.value.now),
+			Backspace: () => this.value.min && this.setValue(this.value.min),
+			Delete: () => this.value.min && this.setValue(this.value.min),
 			default: () => false,
 		};
 
@@ -221,6 +208,14 @@ export default class Spinbutton {
 			event.preventDefault();
 			codes[key]();
 		}
+	};
+
+	decrease = () => {
+		this.setValue(this.value.now - this.options.step);
+	};
+
+	increase = () => {
+		this.setValue(this.value.now + this.options.step);
 	};
 
 	setMin(value: number, emit: boolean = true): void {
