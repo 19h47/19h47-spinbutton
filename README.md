@@ -1,3 +1,6 @@
+[![](https://img.shields.io/npm/v/@19h47/spinbutton)](https://www.npmjs.com/package/@19h47/spinbutton)
+[![](https://img.shields.io/npm/dm/@19h47/spinbutton)](https://www.npmjs.com/package/@19h47/spinbutton)
+
 # @19h47/spinbutton
 
 A spinbutton is an input widget that restricts its value to a set or range of discrete values. It provides an accessible, keyboard-navigable interface for numerical input that maintains value constraints, supports internationalization through custom text labels, and emits events when values change.
