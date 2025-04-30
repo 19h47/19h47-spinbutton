@@ -99,7 +99,7 @@ class d {
   }
   setValue(t, e = !0) {
     const s = isNaN(t) ? this.value.now : parseInt(t.toString(), 10), n = this.value.min !== !1 ? this.value.min : Number.MIN_SAFE_INTEGER, a = this.value.max !== !1 ? this.value.max : Number.MAX_SAFE_INTEGER;
-    s < n || s > a ? this.el.setAttribute("aria-invalid", "true") : this.el.removeAttribute("aria-invalid"), this.value.now = u(s, n, a), this.value.text = r(this.value.now, this.text), this.value.max && h(this.$increase, this.value.now, this.value.max), this.value.min && h(this.$decrease, this.value.now, this.value.min), this.el.setAttribute("aria-valuenow", this.value.now.toString()), this.el.setAttribute("aria-valuetext", this.value.text), this.$input && (this.$input.setAttribute("value", this.value.now.toString()), this.$input.value = this.value.now.toString()), this.$liveRegion && (this.$liveRegion.textContent = this.value.text), e && (this.throttle || (this.throttle = o(() => {
+    s < n || s > a ? this.el.setAttribute("aria-invalid", "true") : this.el.removeAttribute("aria-invalid"), this.value.now = u(s, n, a), this.value.text = r(this.value.now, this.text), this.value.max !== !1 && h(this.$increase, this.value.now, this.value.max), this.value.min !== !1 && h(this.$decrease, this.value.now, this.value.min), this.el.setAttribute("aria-valuenow", this.value.now.toString()), this.el.setAttribute("aria-valuetext", this.value.text), this.$input && (this.$input.setAttribute("value", this.value.now.toString()), this.$input.value = this.value.now.toString()), this.$liveRegion && (this.$liveRegion.textContent = this.value.text), e && (this.throttle || (this.throttle = o(() => {
       const l = { value: this.value.now };
       v(this.el, l, "change");
     }, this.options.delay)), this.throttle());

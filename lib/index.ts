@@ -246,11 +246,11 @@ export default class Spinbutton {
 		this.value.now = clamp(current, min, max);
 		this.value.text = setText(this.value.now, this.text);
 
-		if (this.value.max) {
+		if (this.value.max !== false) {
 			toggleDisabled(this.$increase, this.value.now, this.value.max);
 		}
 
-		if (this.value.min) {
+		if (this.value.min !== false) {
 			toggleDisabled(this.$decrease, this.value.now, this.value.min);
 		}
 
