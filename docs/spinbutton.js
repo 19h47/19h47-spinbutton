@@ -11,7 +11,8 @@ const u = (i, t, e) => Math.min(Math.max(i, t), e), o = (i, t) => {
     return t === e ? i.setAttribute("disabled", "true") : i.removeAttribute("disabled");
 }, r = (i, t) => t ? `${i} ${i <= 1 ? t.single : t.plural}` : i.toString(), v = (i, t = {}, e) => {
   const s = new CustomEvent(`Spinbutton.${e}`, {
-    bubbles: !1,
+    bubbles: !0,
+    // Allow the event to propagate up the DOM tree
     cancelable: !0,
     detail: t
   });

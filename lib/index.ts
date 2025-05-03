@@ -53,12 +53,11 @@ const dispatchEvent = (
 	name: string
 ): boolean => {
 	const event = new CustomEvent(`Spinbutton.${name}`, {
-		bubbles: false,
+		bubbles: true, // Allow the event to propagate up the DOM tree
 		cancelable: true,
 		detail: details,
 	});
 
-	// Dispatch the event on target.
 	return target.dispatchEvent(event);
 };
 
