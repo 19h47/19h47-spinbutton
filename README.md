@@ -1,5 +1,6 @@
 [![](https://img.shields.io/npm/v/@19h47/spinbutton)](https://www.npmjs.com/package/@19h47/spinbutton)
 [![](https://img.shields.io/npm/dm/@19h47/spinbutton)](https://www.npmjs.com/package/@19h47/spinbutton)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/19h47/19h47-spinbutton)
 
 # @19h47/spinbutton
 
