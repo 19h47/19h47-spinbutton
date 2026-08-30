@@ -1,4 +1,4 @@
-import { clamp, throttle } from './utils';
+import { clamp, localeOf, setText, throttle } from './utils';
 import { Options, Value, Text } from './type';
 
 /**
@@ -26,21 +26,6 @@ const toggleDisabled = (
 };
 
 /**
- * Set Text
- *
- * @param {number} now
- * @param {Text} append
- * @returns
- */
-const setText = (now: number, append: Text) => {
-	if (append) {
-		return `${now} ${now <= 1 ? append.single : append.plural}`;
-	}
-
-	return now.toString();
-};
-
-/**
  * Dispatch event
  *
  * @param {HTMLElement} target
@@ -62,47 +47,19 @@ const dispatchEvent = (
 };
 
 const optionsDefault: Options = {
-	text: {
-		single: 'item',
-		plural: 'items',
-	},
 	step: 1,
 	delay: 20,
 };
-
-/**
- * Dynamically adds the `.sr-only` class to the document's styles.
- */
-const addSrOnlyStyles = () => {
-	const style = document.createElement('style');
-	style.textContent = `
-		.sr-only {
-			position: absolute;
-			width: 1px;
-			height: 1px;
-			padding: 0;
-			margin: -1px;
-			overflow: hidden;
-			clip: rect(0, 0, 0, 0);
-			white-space: nowrap;
-			border: 0;
-		}
-	`;
-	document.head.appendChild(style);
-};
-
-// Call the function to ensure the `.sr-only` class is available
-addSrOnlyStyles();
 
 export default class Spinbutton {
 	el: HTMLElement;
 	$input: HTMLInputElement | null;
 	$increase: HTMLButtonElement | null;
 	$decrease: HTMLButtonElement | null;
-	$liveRegion: HTMLElement | null; // Add a live region for screen reader announcements
+	$liveRegion: HTMLElement | null;
 	options: Options;
 	value: Value;
-	text: Text;
+	text: Text | null;
 
 	private throttle: (() => void) | null = null;
 
@@ -114,35 +71,20 @@ export default class Spinbutton {
 		this.$input = this.el.querySelector<HTMLInputElement>('input[type="text"]');
 		this.$increase = this.el.querySelector('.js-increase');
 		this.$decrease = this.el.querySelector('.js-decrease');
-
-		// Create and append the live region
-		this.$liveRegion = document.createElement('div');
-		this.$liveRegion.setAttribute('aria-live', 'polite');
-		this.$liveRegion.setAttribute('aria-atomic', 'true');
-		this.$liveRegion.classList.add('sr-only'); // Apply the dynamically added class
-		this.el.appendChild(this.$liveRegion);
+		this.$liveRegion = this.el.querySelector('[aria-live]');
 
 		const now = parseInt(this.el.getAttribute('aria-valuenow') || '0', 10);
 
-		this.text = (() => {
-			try {
-				return (
-					JSON.parse(this.el.getAttribute('data-spinbutton-text') as string) ||
-					options.text
-				);
-			} catch {
-				return options.text;
-			}
-		})();
+		this.text = JSON.parse(this.el.getAttribute('data-spinbutton-text') || 'null');
 
 		this.options.step = parseInt(
 			this.el.getAttribute('data-spinbutton-step') ||
-				this.options.step.toString(),
+			this.options.step.toString(),
 			10
 		);
 		this.options.delay = parseInt(
 			this.el.getAttribute('data-spinbutton-delay') ||
-				this.options.delay.toString(),
+			this.options.delay.toString(),
 			10
 		);
 
@@ -156,7 +98,7 @@ export default class Spinbutton {
 					? parseInt(this.el.getAttribute('aria-valuemax') || '0', 10)
 					: false,
 			now,
-			text: setText(now, this.text).toString(),
+			text: setText(now, this.text, localeOf(this.el)),
 		};
 	}
 
@@ -243,7 +185,7 @@ export default class Spinbutton {
 		}
 
 		this.value.now = clamp(current, min, max);
-		this.value.text = setText(this.value.now, this.text);
+		this.value.text = setText(this.value.now, this.text, localeOf(this.el));
 
 		if (this.value.max !== false) {
 			toggleDisabled(this.$increase, this.value.now, this.value.max);
@@ -288,10 +230,6 @@ export default class Spinbutton {
 		}
 		if (this.$input) {
 			this.$input.removeEventListener('input', this.handleInput);
-		}
-
-		if (this.$liveRegion) {
-			this.el.removeChild(this.$liveRegion);
 		}
 	}
 }

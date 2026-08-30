@@ -56,7 +56,18 @@ describe('Spinbutton', () => {
 		expect(spinbutton.value.now).toBe(0);
 	});
 
+	it('should leave the live region alone when the markup has none', () => {
+		const spinbutton = new Spinbutton(element);
+		spinbutton.init();
+		expect(spinbutton.$liveRegion).toBeNull();
+		expect(element.querySelector('[aria-live]')).toBeNull();
+	});
+
 	it('should update the live region with the current value', () => {
+		element.insertAdjacentHTML(
+			'beforeend',
+			'<div class="visually-hidden" aria-live="polite" aria-atomic="true"></div>',
+		);
 		const spinbutton = new Spinbutton(element);
 		spinbutton.init();
 		const liveRegion = element.querySelector('[aria-live="polite"]') as HTMLDivElement;
@@ -87,10 +98,30 @@ describe('Spinbutton', () => {
 		expect(spinbutton.options.delay).toBe(500);
 	});
 
-	it('should handle custom text values in options', () => {
-		const spinbutton = new Spinbutton(element, { text: { single: 'Custom Text', plural: 'Custom Texts' } });
+	it('should read word forms from data-spinbutton-text', () => {
+		element.setAttribute('data-spinbutton-text', '{"one":"barrel","other":"barrels"}');
+		const spinbutton = new Spinbutton(element);
 		spinbutton.init();
-		expect(spinbutton.text).toStrictEqual({ single: 'Custom Text', plural: 'Custom Texts' });
+		expect(spinbutton.text).toStrictEqual({ one: 'barrel', other: 'barrels' });
+	});
+
+	it('should format aria-valuetext with Intl.PluralRules when forms are in the markup', () => {
+		element.setAttribute('lang', 'en');
+		element.setAttribute('aria-valuenow', '0');
+		element.setAttribute('data-spinbutton-text', '{"one":"item","other":"items"}');
+		const spinbutton = new Spinbutton(element);
+		spinbutton.init();
+		expect(element.getAttribute('aria-valuetext')).toBe('0 items');
+		spinbutton.setValue(1, false);
+		expect(element.getAttribute('aria-valuetext')).toBe('1 item');
+	});
+
+	it('should use the number alone when the markup has no word forms', () => {
+		element.setAttribute('aria-valuenow', '0');
+		const spinbutton = new Spinbutton(element);
+		spinbutton.init();
+		expect(spinbutton.text).toBeNull();
+		expect(element.getAttribute('aria-valuetext')).toBe('0');
 	});
 
 	it('should handle invalid or non-numeric input gracefully', () => {

@@ -4,21 +4,15 @@
 
 # @19h47/spinbutton
 
-A spinbutton is an input widget that restricts its value to a set or range of discrete values. It provides an accessible, keyboard-navigable interface for numerical input that maintains value constraints, supports internationalization through custom text labels, and emits events when values change.
+A spinbutton is an input widget that restricts its value to a set or range of discrete values. It provides an accessible, keyboard-navigable interface for numerical input that maintains value constraints, internationalizes `aria-valuetext` with [Intl.PluralRules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules), and emits events when values change.
 
 ## Installation
 
-### Using Package Manager
-
-The recommended way to install the Spinbutton component is through a package manager like npm or yarn:
-
 ```bash
-# Using npm
-npm install @19h47/spinbutton
-
-# Using yarn
-yarn add @19h47/spinbutton
+pnpm add @19h47/spinbutton
 ```
+
+Also works with `npm` / `yarn` / `bun`.
 
 ### Manual Download
 
@@ -38,8 +32,11 @@ The spinbutton is a `div` element with the role of `spinbutton`. It contains two
 
 	<button class="js-increase" tabindex="-1" aria-label="increase" type="button">+</button>
 
+	<div class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
 </div>
 ```
+
+The live region is optional. If it is in the markup, the script updates its text; it is never created or styled by JavaScript.
 
 ## JavaScript
 
@@ -79,11 +76,10 @@ spinbutton.addEventListener('Spinbutton.change', event => {
 
 ## Configuration Options
 
-The spinbutton accepts the following options. The options can be set as data attributes on the `div` element or passed as an object when creating the spinbutton instance.
+The spinbutton accepts the following options. They can be set as data attributes on the `div` or passed when creating the instance.
 
 | Option  | Type   |                                                          | Default | Attributes              |
 | ------- | ------ | -------------------------------------------------------- | ------- | ----------------------- |
-| `text`  | object | Object containing _single_ and _plural_ text.            | -       | `data-spinbutton-text`  |
 | `step`  | number | The step value to increase or decrease the value.        | 1       | `data-spinbutton-step`  |
 | `delay` | number | The delay in milliseconds before the event is triggered. | 20      | `data-spinbutton-delay` |
 
@@ -92,15 +88,7 @@ Example with options:
 ```javascript
 import Spinbutton from '@19h47/spinbutton';
 const $element = document.querySelector('[role="spinbutton"]');
-const options = {
-	text: {
-		single: 'item',
-		plural: 'items'
-	},
-	step: 5,
-	delay: 100
-};
-const spinbutton = new Spinbutton($element, options);
+const spinbutton = new Spinbutton($element, { step: 5, delay: 100 });
 spinbutton.init();
 ```
 
@@ -127,7 +115,7 @@ The spinbutton uses the following ARIA roles, properties, and states. The `aria-
 | `spinbutton` | `aria-valuemin`  | `div`   | The minimum value of the spinbutton.          |
 | `spinbutton` | `aria-valuemax`  | `div`   | The maximum value of the spinbutton.          |
 | `spinbutton` | `aria-valuenow`  | `div`   | The current value of the spinbutton.          |
-| `spinbutton` | `aria-valuetext` | `div`   | The text representation of the current value. |
+| `spinbutton` | `aria-valuetext` | `div`   | Spoken value, from `lang` + `data-spinbutton-text`. |
 
 ## Customization Examples
 
@@ -137,15 +125,6 @@ You can customize the step size:
 
 ```html
 <div role="spinbutton" data-spinbutton-step="5" aria-valuemin="5" aria-valuemax="50" aria-valuenow="5">
-    <!-- buttons and input -->
-</div>
-```
-### Custom Text
-
-You can provide custom text for singular and plural forms:
-
-```html
-<div role="spinbutton" data-spinbutton-text='{"single":"barrel","plural":"barrels"}' aria-valuemin="1" aria-valuemax="100" aria-valuenow="1">
     <!-- buttons and input -->
 </div>
 ```
@@ -165,6 +144,48 @@ spinbutton.setMax(200);
 spinbutton.setValue(50);
 ```
 
+## Internationalization
+
+`aria-valuetext` is formatted with [Intl.PluralRules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules). Nothing is hardcoded in English: the locale is the closest [lang](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/lang) attribute (`<html lang="fr">`, or `lang` on the spinbutton), and the words come from `data-spinbutton-text`.
+
+Without that attribute, the value text is just the number (`0`, `1`, `2`).
+
+Keys are [CLDR plural categories](https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html): `one`, `other`, and `zero` / `two` / `few` / `many` when the language needs them.
+
+### English
+
+`0` and `2+` select `other`. `1` selects `one`.
+
+```html
+<div lang="en" role="spinbutton" data-spinbutton-text='{"one":"barrel","other":"barrels"}' aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+	<!-- buttons and input -->
+</div>
+```
+
+| `aria-valuenow` | `aria-valuetext` |
+| --------------- | ---------------- |
+| `0`             | `0 barrels`      |
+| `1`             | `1 barrel`       |
+| `2`             | `2 barrels`      |
+
+### French
+
+`0` and `1` select `one`. `2+` selects `other`.
+
+```html
+<div lang="fr" role="spinbutton" data-spinbutton-text='{"one":"tonneau","other":"tonneaux"}' aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+	<!-- buttons and input -->
+</div>
+```
+
+| `aria-valuenow` | `aria-valuetext` |
+| --------------- | ---------------- |
+| `0`             | `0 tonneau`      |
+| `1`             | `1 tonneau`      |
+| `2`             | `2 tonneaux`     |
+
 ## References
 
-[Spinbutton Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/)
+- [Spinbutton Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/)
+- [Intl.PluralRules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/PluralRules)
+- [CLDR Language Plural Rules](https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html)

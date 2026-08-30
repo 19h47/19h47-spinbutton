@@ -1,17 +1,19 @@
-
 /**
- * Represents a text object with singular and plural forms.
+ * Word forms keyed by `Intl.PluralRules` categories.
  */
 export interface Text {
-	single: string;
-	plural: string;
+	zero?: string;
+	one?: string;
+	two?: string;
+	few?: string;
+	many?: string;
+	other?: string;
 }
 
 /**
  * Interface representing the options for the spin button.
  */
 export interface Options {
-	text?: Text;
 	step?: number;
 	delay?: number;
 }

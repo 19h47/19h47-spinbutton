@@ -1,3 +1,5 @@
+import { Text } from './type';
+
 /**
  * Clamps a number between a minimum and maximum value.
  *
@@ -44,4 +46,21 @@ const throttle = (func: (...args: any[]) => void, limit: number) => {
 	};
 };
 
-export { clamp, throttle };
+const localeOf = (el: HTMLElement): string | undefined =>
+	el.closest('[lang]')?.getAttribute('lang') || undefined;
+
+/**
+ * Pick a word form with `Intl.PluralRules` for the given locale.
+ */
+const setText = (now: number, forms?: Text, locale?: string): string => {
+	if (!forms) {
+		return now.toString();
+	}
+
+	const category = new Intl.PluralRules(locale).select(now);
+	const word = forms[category] ?? forms.other ?? forms.one;
+
+	return word ? `${now} ${word}` : now.toString();
+};
+
+export { clamp, throttle, localeOf, setText };
